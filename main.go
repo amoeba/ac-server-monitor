@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
+
+	"github.com/revel/cron"
 )
 
 // Server ...
@@ -16,6 +19,11 @@ type ServerList struct {
 }
 
 func main() {
+	// Cron
+	c := cron.New()
+	c.AddFunc("* * * * * *", func() { fmt.Println("hi") })
+	c.Start()
+
 	tmpl := template.Must(template.ParseFiles("template.html"))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
