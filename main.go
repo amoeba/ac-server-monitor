@@ -2,43 +2,53 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"net/http"
-
-	"github.com/revel/cron"
+	"text/template"
 )
 
-// Server ...
-type Server struct {
-	Name string
-}
-
-// ServerList ...
-type ServerList struct {
-	Servers []Server
+// TemplateData ...
+type TemplateData struct {
+	ServerList ServerList
+	Statuses   map[string]bool
 }
 
 func main() {
+	sl := fetch()
+	fmt.Println("Fetched", len(sl.Servers), "servers")
+
+	statuses := check(sl)
+	fmt.Println(statuses)
+
 	// Cron
-	c := cron.New()
-	c.AddFunc("* * * * * *", func() { fmt.Println("hi") })
-	c.Start()
+	// c := cron.New()
+	// c.AddFunc("@every 5s", func() { check(sl) })
+	// c.Start()
 
 	tmpl := template.Must(template.ParseFiles("template.html"))
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		data := ServerList{
-			Servers: []Server{
-				{Name: "Server 1"},
-				{Name: "Server 2"},
-				{Name: "Server 3"},
-			},
-		}
+	tmplData := TemplateData{}
+	tmplData.Statuses = statuses
+	tmplData.ServerList = sl
 
-		tmpl.Execute(w, data)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		tmpl.Execute(w, tmplData)
 	})
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		panic(err)
 	}
+}
+
+func check(sl ServerList) map[string]bool {
+	statuses := make(map[string]bool)
+
+	for _, server := range sl.Servers {
+		connectionstring := server.Host + ":" + server.Port
+
+		fmt.Println(connectionstring)
+		// fmt.Println(isup(connectionstring))
+		statuses[server.ID] = true // temporary
+	}
+
+	return statuses
 }

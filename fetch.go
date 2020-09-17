@@ -18,6 +18,7 @@ type ServerList struct {
 type ServerItem struct {
 	XMLname     xml.Name `xml:"ServerItem"`
 	ID          string   `xml:"id"`
+	Name        string   `xml:"name"`
 	Description string   `xml:"description"`
 	Emu         string   `xml:"emu"`
 	Host        string   `xml:"server_host"`
@@ -28,7 +29,7 @@ type ServerItem struct {
 	Discord     string   `xml:"discord_url"`
 }
 
-func main() {
+func fetch() ServerList {
 	resp, err := http.Get("https://raw.githubusercontent.com/acresources/serverslist/master/Servers.xml")
 
 	if err != nil {
@@ -42,15 +43,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	sl := &ServerList{}
+	sl := ServerList{}
 
 	if err := xml.Unmarshal(body, &sl); err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Print("Number of servers is...", len(sl.Servers), "\n")
-
-	for i, server := range sl.Servers {
-		fmt.Println(i, server.ID)
-	}
+	return sl
 }

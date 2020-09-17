@@ -7,13 +7,7 @@ import (
 	"net"
 )
 
-func main() {
-	up := isup("play.coldeve.online:9000")
-	fmt.Println(up)
-}
-
 func isup(connection string) bool {
-	fmt.Println("Dialing...")
 	conn, connerror := net.Dial("udp", connection)
 
 	if connerror != nil {
@@ -21,7 +15,6 @@ func isup(connection string) bool {
 		return false
 	}
 
-	fmt.Println("Sending login packet...")
 	message := []uint8{
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x93, 0x00,
 		0xd0, 0x05, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00,
@@ -36,9 +29,6 @@ func isup(connection string) bool {
 
 	loginpacket := iatoba(message)
 	conn.Write(loginpacket)
-
-	fmt.Println("Reading connection...")
-
 	readbuffer := make([]byte, 1024)
 	n, readerr := conn.Read(readbuffer)
 
