@@ -6,10 +6,15 @@ import (
 	"text/template"
 )
 
+// TemplateDataServer ...
+type TemplateDataServer struct {
+	Info ServerItem
+	IsUp bool
+}
+
 // TemplateData ...
 type TemplateData struct {
-	ServerList ServerList
-	Statuses   map[string]bool
+	Servers []TemplateDataServer
 }
 
 func main() {
@@ -17,7 +22,6 @@ func main() {
 	fmt.Println("Fetched", len(sl.Servers), "servers")
 
 	statuses := check(sl)
-	fmt.Println(statuses)
 
 	// Cron
 	// c := cron.New()
@@ -26,9 +30,19 @@ func main() {
 
 	tmpl := template.Must(template.ParseFiles("template.html"))
 
-	tmplData := TemplateData{}
-	tmplData.Statuses = statuses
-	tmplData.ServerList = sl
+	//
+	tmplData := new(TemplateData)
+
+	for _, server := range sl.Servers {
+		s := new(TemplateDataServer)
+
+		s.Info = server
+		s.IsUp = statuses[server.ID]
+
+		news := *s
+		tmplData.Servers = append(tmplData.Servers, news)
+	}
+	//
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tmpl.Execute(w, tmplData)
@@ -46,8 +60,8 @@ func check(sl ServerList) map[string]bool {
 		connectionstring := server.Host + ":" + server.Port
 
 		fmt.Println(connectionstring)
-		// fmt.Println(isup(connectionstring))
-		statuses[server.ID] = true // temporary
+		fmt.Println(isup(connectionstring))
+		statuses[server.ID] = isup(connectionstring)
 	}
 
 	return statuses

@@ -9,15 +9,19 @@
         <tr>
           <th>Name</th>
           <th>Description</th>
+          <th>Host</th>
+          <th>Port</th>
           <th>Up?</th>
         </tr>
       </thead>
       <tbody>
-        {{range .ServerList.Servers}}
+        {{range .Servers}}
         <tr>
-          <td>{{.Name}}</td>
-          <td>{{.Description}}</td>
-          <td>{{$Statuses[.ID]}}</td>
+          <td>{{.Info.Name}}</td>
+          <td>{{.Info.Description}}</td>
+          <td>{{.Info.Host}}</td>
+          <td>{{.Info.Port}}</td>
+          <td>{{.IsUp}}</td>
         </tr>
         {{end}}
       </tbody>

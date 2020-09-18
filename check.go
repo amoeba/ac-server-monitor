@@ -5,10 +5,12 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
+	"time"
 )
 
 func isup(connection string) bool {
-	conn, connerror := net.Dial("udp", connection)
+	fmt.Println("Checking ", connection)
+	conn, connerror := net.DialTimeout("udp", connection, 5*time.Second)
 
 	if connerror != nil {
 		fmt.Println("Error:", connerror)
@@ -30,6 +32,7 @@ func isup(connection string) bool {
 	loginpacket := iatoba(message)
 	conn.Write(loginpacket)
 	readbuffer := make([]byte, 1024)
+	conn.SetReadDeadline(time.Now().Add(5 * time.Second))
 	n, readerr := conn.Read(readbuffer)
 
 	if readerr != nil {
