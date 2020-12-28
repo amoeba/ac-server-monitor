@@ -28,7 +28,7 @@ func main() {
 	// c.AddFunc("@every 5s", func() { check(sl) })
 	// c.Start()
 
-	tmpl := template.Must(template.ParseFiles("template.html"))
+	tmpl := template.Must(template.ParseFiles("resources/template.html"))
 
 	//
 	tmplData := new(TemplateData)
