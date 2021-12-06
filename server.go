@@ -1,27 +1,17 @@
-package main
+package monitor
 
 import (
 	"fmt"
+	"monitor/lib"
 	"net/http"
 	"text/template"
 )
 
-// TemplateDataServer ...
-type TemplateDataServer struct {
-	Info ServerItem
-	IsUp bool
-}
-
-// TemplateData ...
-type TemplateData struct {
-	Servers []TemplateDataServer
-}
-
 func main() {
-	sl := fetch()
+	sl := lib.Fetch()
 	fmt.Println("Fetched", len(sl.Servers), "servers")
 
-	statuses := check(sl)
+	statuses := lib.Check(sl)
 
 	// Cron
 	// c := cron.New()
@@ -29,12 +19,10 @@ func main() {
 	// c.Start()
 
 	tmpl := template.Must(template.ParseFiles("resources/template.html"))
-
-	//
-	tmplData := new(TemplateData)
+	tmplData := new(lib.TemplateData)
 
 	for _, server := range sl.Servers {
-		s := new(TemplateDataServer)
+		s := new(lib.TemplateDataServer)
 
 		s.Info = server
 		s.IsUp = statuses[server.ID]
@@ -42,7 +30,6 @@ func main() {
 		news := *s
 		tmplData.Servers = append(tmplData.Servers, news)
 	}
-	//
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tmpl.Execute(w, tmplData)
@@ -51,18 +38,4 @@ func main() {
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		panic(err)
 	}
-}
-
-func check(sl ServerList) map[string]bool {
-	statuses := make(map[string]bool)
-
-	for _, server := range sl.Servers {
-		connectionstring := server.Host + ":" + server.Port
-
-		fmt.Println(connectionstring)
-		fmt.Println(isup(connectionstring))
-		statuses[server.ID] = isup(connectionstring)
-	}
-
-	return statuses
 }

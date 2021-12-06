@@ -1,4 +1,4 @@
-package main
+package lib
 
 import (
 	"bytes"
@@ -8,7 +8,19 @@ import (
 	"time"
 )
 
-func isup(connection string) bool {
+func iatoba(input []uint8) []byte {
+	buffer := new(bytes.Buffer)
+	writeerr := binary.Write(buffer, binary.LittleEndian, input)
+
+	if writeerr != nil {
+		fmt.Println("binary.Write failed:", writeerr)
+		panic(1)
+	}
+
+	return (buffer.Bytes())
+}
+
+func IsUp(connection string) bool {
 	fmt.Println("Checking ", connection)
 	conn, connerror := net.DialTimeout("udp", connection, 5*time.Second)
 
@@ -45,16 +57,4 @@ func isup(connection string) bool {
 	}
 
 	return false
-}
-
-func iatoba(input []uint8) []byte {
-	buffer := new(bytes.Buffer)
-	writeerr := binary.Write(buffer, binary.LittleEndian, input)
-
-	if writeerr != nil {
-		fmt.Println("binary.Write failed:", writeerr)
-		panic(1)
-	}
-
-	return (buffer.Bytes())
 }
