@@ -22,8 +22,12 @@ const name = "monitor"
 
 // Test
 func printUsage() {
-	fmt.Printf("Usage: %s <connection-string>\n\n", name)
-	fmt.Printf("Example: %s play.coldeve.online:9000", name)
+	fmt.Printf("Usage: %s <command> [<args>]\n\n", name)
+	fmt.Print("Available commands:\n\n")
+	fmt.Print("  check <connection-info>: Check a single server\n\n")
+	fmt.Printf("    Example: ./%s play.coldeve.online:9000\n\n", name)
+	fmt.Print("  list: Check all servers in the public server list\n\n")
+	fmt.Printf("    Example: ./%s list\n", name)
 }
 
 func ParseServerInfo(arg string) (lib.Server, error) {
@@ -37,9 +41,6 @@ func ParseServerInfo(arg string) (lib.Server, error) {
 }
 
 func main() {
-	log.SetPrefix(fmt.Sprintf("%s: ", name))
-	log.SetFlags(0)
-
 	args := os.Args[1:]
 
 	if len(args) <= 0 {
