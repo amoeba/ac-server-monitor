@@ -2,31 +2,32 @@ package lib
 
 import (
 	"encoding/xml"
-	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
-func Fetch() ServerList {
-	resp, err := http.Get("https://raw.githubusercontent.com/acresources/serverslist/master/Servers.xml")
+const serverListURL = "https://raw.githubusercontent.com/acresources/serverslist/master/Servers.xml"
+
+// Fetch fetches the public server list and returns a ServerList
+func Fetch() (ServerList, error) {
+	resp, err := http.Get(serverListURL)
 
 	if err != nil {
-		fmt.Println("error")
+		return ServerList{}, err
 	}
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
-		log.Fatal(err)
+		return ServerList{}, err
 	}
 
 	sl := ServerList{}
 
 	if err := xml.Unmarshal(body, &sl); err != nil {
-		log.Fatal(err)
+		return ServerList{}, err
 	}
 
-	return sl
+	return sl, nil
 }
