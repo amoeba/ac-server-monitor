@@ -1,12 +1,27 @@
 package lib
 
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
 	"net"
 	"time"
 )
 
 const timeout = 5
+
+// iotoba converts a uint8[] to a byte[]
+func iatoba(input []uint8) []byte {
+	buffer := new(bytes.Buffer)
+	writeerr := binary.Write(buffer, binary.LittleEndian, input)
+
+	if writeerr != nil {
+		fmt.Println("binary.Write failed:", writeerr)
+		panic(1)
+	}
+
+	return (buffer.Bytes())
+}
 
 // FakeLoginPacket() creates a byte[] suitable for sending to a server in order
 // to check whether that server is up. The packet doesn't contain valid login
