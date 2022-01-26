@@ -38,7 +38,7 @@ func ListServers() (int, error) {
 
 		srv := Server{Host: item.Host, Port: item.Port}
 		statusMessage := getStatusMessage(Check(srv))
-		fmt.Fprintf(w, "%s\t\t%s\t\n", item.Name, statusMessage)
+		fmt.Fprintf(w, "%s\t%s\t\n", item.Name, statusMessage)
 	}
 
 	w.Flush()
