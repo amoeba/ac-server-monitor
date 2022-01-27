@@ -35,7 +35,6 @@ func ListServers() (int, error) {
 	fmt.Fprintln(w, "NAME\tSTATUS\t")
 
 	for _, item := range sl.Servers {
-
 		srv := Server{Host: item.Host, Port: item.Port}
 		statusMessage := getStatusMessage(Check(srv))
 		fmt.Fprintf(w, "%s\t%s\t\n", item.Name, statusMessage)
