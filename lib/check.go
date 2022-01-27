@@ -50,7 +50,7 @@ func FakeLoginPacket() []byte {
 // It returns true or false depending on whether the number of bytes matches
 // the expected value.
 func CheckResponseLength(nbytes int) bool {
-	return nbytes == 52
+	return nbytes == 52 || nbytes == 28
 }
 
 // Check checks whether or not a Server is up
