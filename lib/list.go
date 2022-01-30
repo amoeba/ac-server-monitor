@@ -1,11 +1,10 @@
 package lib
 
 import (
+	"encoding/json"
 	"fmt"
-	"os"
 	"strings"
 	"sync"
-	"text/tabwriter"
 )
 
 func getStatusMessage(status bool, err error) string {
@@ -68,15 +67,8 @@ func ListServers() (int, error) {
 
 	wg.Wait()
 
-	// Write out a column-aligned table of statuses
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', 0)
-	fmt.Fprintln(w, "NAME\tSTATUS\t")
-
-	for _, s := range statuses {
-		fmt.Fprintf(w, "%s\t%s\t\n", s.Name, s.Status)
-	}
-
-	w.Flush()
+	asjson, _ := json.MarshalIndent(statuses, "", "  ")
+	fmt.Println(string(asjson))
 
 	return len(sl.Servers), nil
 }
