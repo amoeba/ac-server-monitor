@@ -28,3 +28,9 @@ type Server struct {
 	Host string
 	Port string
 }
+
+// Represents the status of a server
+type ServerListStatus struct {
+	Name   string
+	Status string
+}
