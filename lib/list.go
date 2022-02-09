@@ -7,25 +7,31 @@ import (
 	"sync"
 )
 
+const (
+	UP    = "UP"
+	DOWN  = "DOWN"
+	ERROR = "ERROR"
+)
+
 func getStatusMessage(status bool, err error) string {
 	if err != nil {
 		msg := err.Error()
 
 		if strings.Contains(msg, "i/o timeout") {
-			return "DOWN"
+			return UP
 		}
 
 		if strings.Contains(msg, "read: connection refused") {
-			return "DOWN"
+			return DOWN
 		}
 
-		return "ERROR"
+		return ERROR
 	}
 
 	if status {
-		return "UP"
+		return UP
 	} else {
-		return "DOWN"
+		return DOWN
 	}
 }
 
