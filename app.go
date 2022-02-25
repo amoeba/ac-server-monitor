@@ -11,6 +11,8 @@ import (
 	"monitor/lib"
 	"net/http"
 	"os"
+	"regexp"
+	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/robfig/cron"
@@ -94,13 +96,22 @@ func (a App) ApiUptimes(w http.ResponseWriter, r *http.Request) {
 	log.Println("ApiUptime")
 	w.Header().Set("Content-Type", "application/json")
 
-	var data []api.UptimeRow = api.Uptime(a.Database, 1)
+	// Pull out server id from URL
+	// TODO: Put into subroutine
+	re := regexp.MustCompile(`\/api\/uptime\/(\d+)`)
+	m := re.FindStringSubmatch(r.URL.Path)
 
-	for i, s := range data {
-		log.Println(i)
-		log.Println(s.Date)
-		log.Println(s.Ratio)
+	if len(m) != 2 {
+		log.Fatal("OOPS. FIX ME")
 	}
+
+	server_id, err := strconv.Atoi(m[1])
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var data []api.UptimeRow = api.Uptime(a.Database, server_id)
 
 	output, err := json.MarshalIndent(data, "", "  ")
 
