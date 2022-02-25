@@ -40,7 +40,6 @@ func (a App) Start() {
 	c.Start()
 
 	// web
-
 	http.Handle("/favicon.ico", http.NotFoundHandler())
 	http.Handle("/api/servers/", lib.LogReq(a.ApiServers))
 	http.Handle("/api/uptime/", lib.LogReq(a.ApiUptimes))
