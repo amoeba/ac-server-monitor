@@ -1,6 +1,8 @@
 package lib
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+)
 
 // Represents a complete server list XML document
 type ServerList struct {

@@ -1,0 +1,68 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  background-color: navy;
+  color: gold;
+}
+
+header *,
+footer * {
+  padding: 0.5em 0;
+}
+
+header h1 {
+  margin: 0;
+  padding: 0;
+}
+
+header nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 1em;
+}
+
+header a,
+header a:visited,
+footer a,
+footer a:visited {
+  color: gold;
+}
+
+header a,
+header a:visited {
+  text-decoration: none;
+}
+
+header a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  text-align: center;
+}
+
+/* Bars */
+.bars {
+  display: flex;
+  gap: 0.1em;
+  height: 1em;
+}
+
+.bar-container {
+  height: 100%;
+  width: 0.5em;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bar {
+  display: block;
+  background-color: rgba(40, 190, 40);
+  font-style: normal;
+  color: black;
+  width: 100%;
+  border-top: 1px solid white;
+}

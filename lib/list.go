@@ -35,19 +35,7 @@ func getStatusMessage(status bool, err error) string {
 	}
 }
 
-func ListServers() (int, error) {
-	sl, err := Fetch()
-
-	if err != nil {
-		return -1, err
-	}
-
-	if len(sl.Servers) <= 0 {
-		fmt.Println("Server list was empty. Exiting")
-
-		return 0, nil
-	}
-
+func GetStatuses(sl ServerList) []ServerListStatus {
 	statuses := []ServerListStatus{}
 
 	var wg sync.WaitGroup
@@ -72,6 +60,24 @@ func ListServers() (int, error) {
 	}
 
 	wg.Wait()
+
+	return statuses
+}
+
+func ListServers() (int, error) {
+	sl, err := Fetch()
+
+	if err != nil {
+		return -1, err
+	}
+
+	if len(sl.Servers) <= 0 {
+		fmt.Println("Server list was empty. Exiting")
+
+		return 0, nil
+	}
+
+	statuses := GetStatuses(sl)
 
 	asjson, _ := json.MarshalIndent(statuses, "", "  ")
 	fmt.Println(string(asjson))

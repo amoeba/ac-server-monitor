@@ -1,0 +1,63 @@
+{{ template "_header.html" }}
+<table>
+  <thead>
+    <tr>
+      <th>Server</th>
+      <th>Online?</th>
+      <th>Listed?</th>
+      <th>FirstSeen</th>
+      <th>LastSeen</th>
+      <th>LastChecked</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{ range $row := .Servers }}
+    <tr>
+      <td>{{ $row.Name }}</td>
+      <td>{{ if $row.Status.IsOnline }}{{"🟢"}}{{else}}{{"🔴"}}{{end}}</td>
+      <td>{{ if $row.Active }}{{"✅"}}{{else}}{{"❌"}}{{end}}</td>
+      <td>{{ $row.Status.FirstSeen }}</td>
+      <td>{{ $row.Status.LastSeen }}</td>
+      <td>{{ $row.Status.LastChecked }}</td>
+      <td>
+        <div class="bars">
+          <div class="bar-container">
+            <i class="bar" style="height: 100%;"></i>
+          </div>
+          <div class="bar-container">
+            <i class="bar" style="height: 90%;"></i>
+          </div>
+          <div class="bar-container">
+            <i class="bar" style="height: 80%;"></i>
+          </div>
+          <div class="bar-container">
+            <i class="bar" style="height: 70%;"></i>
+          </div>
+          <div class="bar-container">
+            <i class="bar" style="height: 60%;"></i>
+          </div>
+          <div class="bar-container">
+            <i class="bar" style="height: 50%;"></i>
+          </div>
+          <div class="bar-container">
+            <i class="bar" style="height: 60%;"></i>
+          </div>
+          <div class="bar-container">
+            <i class="bar" style="height: 70%;"></i>
+          </div>
+          <div class="bar-container">
+            <i class="bar" style="height: 80%;"></i>
+          </div>
+          <div class="bar-container">
+            <i class="bar" style="height: 90%;"></i>
+          </div>
+          <div class="bar-container">
+            <i class="bar" style="height: 100%;"></i>
+          </div>
+        </div>
+      </td>
+    </tr>
+    {{ end }}
+  </tbody>
+</table>
+{{ template "_footer.html" }}

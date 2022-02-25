@@ -29,5 +29,5 @@ func Fetch() (ServerList, error) {
 		return ServerList{}, err
 	}
 
-	return sl, nil
+	return sl, err
 }
