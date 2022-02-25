@@ -102,13 +102,21 @@ func (a App) ApiUptimes(w http.ResponseWriter, r *http.Request) {
 	m := re.FindStringSubmatch(r.URL.Path)
 
 	if len(m) != 2 {
-		log.Fatal("OOPS. FIX ME")
+		log.Printf("Failed to extract server_id from %s. Returning HTTP 400.", r.URL.Path)
+
+		w.WriteHeader(400)
+
+		return
 	}
 
 	server_id, err := strconv.Atoi(m[1])
 
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("Failed to convert %s to an int. Returning HTTP 500.", m[1])
+
+		w.WriteHeader(500)
+
+		return
 	}
 
 	var data []api.UptimeRow = api.Uptime(a.Database, server_id)
