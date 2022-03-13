@@ -5,9 +5,6 @@
       <th>Server</th>
       <th>Online?</th>
       <th>Listed?</th>
-      <th>FirstSeen</th>
-      <th>LastSeen</th>
-      <th>LastChecked</th>
     </tr>
   </thead>
   <tbody>
@@ -16,9 +13,6 @@
       <td>{{ $row.Name }}</td>
       <td>{{ if $row.Status.IsOnline }}{{"🟢"}}{{else}}{{"🔴"}}{{end}}</td>
       <td>{{ if $row.Active }}{{"✅"}}{{else}}{{"❌"}}{{end}}</td>
-      <td>{{ $row.Status.FirstSeen }}</td>
-      <td>{{ $row.Status.LastSeen }}</td>
-      <td>{{ $row.Status.LastChecked }}</td>
       <td>
         <div class="bars">
           <div class="bar-container">
