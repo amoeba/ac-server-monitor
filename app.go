@@ -24,7 +24,7 @@ type App struct {
 	T        *template.Template
 }
 
-func (a App) Start() {
+func (a App) Start(no_cron bool) {
 	// migrate
 	migrate_error := db.AutoMigrate(a.Database)
 
@@ -39,7 +39,10 @@ func (a App) Start() {
 		lib.Update(a.Database)
 	})
 
-	c.Start()
+	if !no_cron {
+		log.Println("Skipping cron.Start() due to getting --offline flag")
+		c.Start()
+	}
 
 	// web
 	http.Handle("/favicon.ico", http.NotFoundHandler())
@@ -164,12 +167,19 @@ func main() {
 		return
 	}
 
-	// Serve
+	// (Hackily) handle a --no-cron command line arg so we can start the
+	// app with server fetchiing and checking off.
+	no_cron := false
 
+	if len(args) == 1 && args[0] == "--no-cron" {
+		no_cron = true
+	}
+
+	// Serve
 	app := App{
 		Port:     lib.Env("PORT", "8080"),
 		Database: database,
 	}
 
-	app.Start()
+	app.Start(no_cron)
 }
