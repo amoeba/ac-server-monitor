@@ -25,7 +25,8 @@ servers <- list(
 )
 
 gen_server_tbl <- function(id, name) {
-  return (tibble(
+  return(tibble(
+    id = id,
     guid = id,
     name = name,
     description = paste0("Description for ", name),
@@ -49,13 +50,13 @@ gen_status <- function(id, server_id, created_at) {
     created_at = as.integer(created_at),
     status = rbinom(1, 1, 0.5)
   )
-  
+
   return(tbl)
 }
 
 gen_statuses_tbl <- function(server_id, begin, end) {
   time_samples <- seq(begin, end, by = sample_period)
-  
+
   do.call(rbind, lapply(time_samples, function(ts) {
     tbl <- gen_status(status_id_counter, server_id, ts)
     status_id_counter <<- status_id_counter + 1
