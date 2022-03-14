@@ -196,6 +196,7 @@ func ServersWithUptimes(db *sql.DB) []ServerAPIResponseWithUptime {
 			err := rows.Scan(
 				&uptime.Date,
 				&uptime.Uptime,
+				&uptime.N,
 			)
 
 			if err != nil {

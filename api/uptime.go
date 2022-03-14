@@ -8,6 +8,7 @@ import (
 type UptimeRow struct {
 	Date   string  `json:"date"`
 	Uptime float64 `json:"uptime"`
+	N      int     `json:"n"`
 }
 
 var QUERY_UPTIME = `
@@ -18,7 +19,11 @@ var QUERY_UPTIME = `
 		UNION ALL
 	SELECT date('now', '-' || level || ' day') AS day, level + 1 AS level FROM ts WHERE level < 14
 	)
-	SELECT day, COALESCE((sum(status) * 1.0 / count(status)) * 100, 0) as uptime FROM ts
+	SELECT
+		day,
+		COALESCE((sum(status) * 1.0 / COUNT(status)) * 100, 0) AS uptime,
+		COUNT(status) AS n
+	FROM ts
 	LEFT JOIN statuses
 	ON
 		date(statuses.created_at, 'unixepoch') = ts.day
@@ -47,6 +52,7 @@ func Uptime(db *sql.DB, server_id int) []UptimeRow {
 		err := rows.Scan(
 			&uptime.Date,
 			&uptime.Uptime,
+			&uptime.N,
 		)
 
 		if err != nil {
