@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"monitor/api"
 	"monitor/db"
@@ -49,6 +50,7 @@ func (a App) Start(no_cron bool) {
 	http.Handle("/api/servers/", lib.LogReq(a.ApiServers))
 	http.Handle("/api/uptime/", lib.LogReq(a.ApiUptimes))
 	http.Handle("/api/", lib.LogReq(a.Api))
+	http.Handle("/export/", lib.LogReq(a.Export))
 	http.Handle("/about/", lib.LogReq(a.About))
 	http.Handle("/static/", lib.LogReq(lib.StaticHandler("static")))
 	http.Handle("/", lib.LogReq(a.Index))
@@ -79,6 +81,21 @@ func (a App) Api(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(output)
+}
+
+func (a App) Export(w http.ResponseWriter, r *http.Request) {
+	x, err := ioutil.ReadFile(lib.Env("DB_PATH", "./monitor.db"))
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Header().Set("Content-Length", fmt.Sprintf("%d", len(x)))
+	w.Header().Set("Content-Disposition", "attachment; filename=\"monitor.sqlite3\"")
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(x)
 }
 
 func (a App) ApiServers(w http.ResponseWriter, r *http.Request) {
