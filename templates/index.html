@@ -15,39 +15,14 @@
       <td>{{ if $row.Active }}{{"✅"}}{{else}}{{"❌"}}{{end}}</td>
       <td>
         <div class="bars">
-          <div class="bar-container">
-            <i class="bar" style="height: 100%;"></i>
-          </div>
-          <div class="bar-container">
-            <i class="bar" style="height: 90%;"></i>
-          </div>
-          <div class="bar-container">
-            <i class="bar" style="height: 80%;"></i>
-          </div>
-          <div class="bar-container">
-            <i class="bar" style="height: 70%;"></i>
-          </div>
-          <div class="bar-container">
-            <i class="bar" style="height: 60%;"></i>
-          </div>
-          <div class="bar-container">
-            <i class="bar" style="height: 50%;"></i>
-          </div>
-          <div class="bar-container">
-            <i class="bar" style="height: 60%;"></i>
-          </div>
-          <div class="bar-container">
-            <i class="bar" style="height: 70%;"></i>
-          </div>
-          <div class="bar-container">
-            <i class="bar" style="height: 80%;"></i>
-          </div>
-          <div class="bar-container">
-            <i class="bar" style="height: 90%;"></i>
-          </div>
-          <div class="bar-container">
-            <i class="bar" style="height: 100%;"></i>
-          </div>
+          {{ range $uptime := $row.Uptime }}
+            <div class="bar-container">
+              <i class="bar"
+                 data-date="{{ $uptime.Date }}"
+                 data-uptime="{{ $uptime.Uptime }}"
+                 style="height: {{ $uptime.Uptime }}%;"></i>
+            </div>
+          {{ end }}
         </div>
       </td>
     </tr>

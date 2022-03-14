@@ -6,29 +6,33 @@ import (
 )
 
 type UptimeRow struct {
-	Date  string  `json:"date"`
-	Ratio float64 `json:"uptime"`
+	Date   string  `json:"date"`
+	Uptime float64 `json:"uptime"`
 }
+
+var QUERY_UPTIME = `
+	WITH ts(day, level)
+	AS
+	(
+	SELECT  date('now') AS day, 0 AS level
+		UNION ALL
+	SELECT date('now', '-' || level || ' day') AS day, level + 1 AS level FROM ts WHERE level < 14
+	)
+	SELECT day, COALESCE((sum(status) * 1.0 / count(status)) * 100, 0) as uptime FROM ts
+	LEFT JOIN statuses
+	ON
+		date(statuses.created_at, 'unixepoch') = ts.day
+	AND
+		statuses.server_id = ?
+	GROUP BY day;
+`
 
 // TODO: Handle the param properly
 // TODO: Handle not found
 func Uptime(db *sql.DB, server_id int) []UptimeRow {
 	log.Println("API.Uptime")
 
-	stmt := `
-		SELECT
-			DATE(created_at, "unixepoch") AS created_datetime,
-			(SUM(status) * 1.0 / COUNT(status)) AS ratio
-		FROM statuses
-		WHERE
-			statuses.server_id = ?
-		GROUP BY
-			created_datetime
-		ORDER BY
-			created_datetime ASC;
-	`
-
-	rows, err := db.Query(stmt, server_id)
+	rows, err := db.Query(QUERY_UPTIME, server_id)
 
 	if err != nil {
 		log.Fatal(err)
@@ -42,7 +46,7 @@ func Uptime(db *sql.DB, server_id int) []UptimeRow {
 	for rows.Next() {
 		err := rows.Scan(
 			&uptime.Date,
-			&uptime.Ratio,
+			&uptime.Uptime,
 		)
 
 		if err != nil {
