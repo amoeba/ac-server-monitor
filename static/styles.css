@@ -2,8 +2,6 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-size: 14px;
-  background-color: navy;
-  color: gold;
 }
 
 header *,
@@ -12,23 +10,22 @@ footer * {
 }
 
 header h1 {
-  margin: 0;
+  margin: 0 0 1.5em 0;
   padding: 0;
+  font-size: 100%;
 }
 
-header nav ul {
+header a,
+footer a {
+  color: blue;
+}
+
+nav ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   display: flex;
   gap: 1em;
-}
-
-header a,
-header a:visited,
-footer a,
-footer a:visited {
-  color: gold;
 }
 
 header a,
@@ -42,6 +39,20 @@ header a:hover {
 
 footer {
   text-align: center;
+}
+
+/* Servers List */
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  line-height: 1.5em;
+}
+
+li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em;
 }
 
 /* Bars */
@@ -60,9 +71,9 @@ footer {
 
 .bar {
   display: block;
-  background-color: rgba(40, 190, 40);
+  background-color: rgba(18, 168, 85, 0.5);
   font-style: normal;
   color: black;
   width: 100%;
-  border-top: 1px solid white;
+  border-top: 1px solid black;
 }
