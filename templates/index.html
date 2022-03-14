@@ -6,12 +6,11 @@
     <span>{{ $row.Name }}</span>
     <div class="bars">
       {{ range $uptime := $row.Uptime }}
-        <div class="bar-container">
-          <i class="bar"
-              data-date="{{ $uptime.Date }}"
-              data-uptime="{{ $uptime.Uptime }}"
-              data-n="{{ $uptime.N }}"
-              style="height: {{ $uptime.Uptime }}%;"></i>
+        <div class="bar-container"
+          aria-label="{{ $uptime.Date }}: {{ $uptime.Uptime }}% (n={{ $uptime.N }})"
+          role="tooltip"
+          data-microtip-position="top">
+          <i class="bar" style="height: {{ $uptime.Uptime }}%;"></i>
         </div>
       {{ end }}
       </div>
