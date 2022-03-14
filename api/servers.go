@@ -178,8 +178,6 @@ func ServersWithUptimes(db *sql.DB) []ServerAPIResponseWithUptime {
 		server.Status = servers[i].Status
 
 		// Add in uptime info
-		log.Printf("Querying uptime for %s", server.ID)
-
 		rows, err := db.Query(QUERY_UPTIME, server.ID)
 
 		if err != nil {
