@@ -11,6 +11,13 @@ type UptimeRow struct {
 	N      int     `json:"n"`
 }
 
+type UptimeTemplateItem struct {
+	Date      string  `json:"date"`
+	Uptime    float64 `json:"uptime"`
+	UptimeFmt string  `json:"-"`
+	N         int     `json:"n"`
+}
+
 var QUERY_UPTIME = `
 	WITH ts(day, level)
 	AS

@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"time"
 )
@@ -48,7 +49,7 @@ type ServerAPIResponseWithUptime struct {
 	Active  bool                     `json:"active"`
 	Address ServerAPIResponseAddress `json:"address"`
 	Status  ServerAPIResponseStatus  `json:"status"`
-	Uptime  []UptimeRow              `json:"uptime"`
+	Uptime  []UptimeTemplateItem     `json:"uptime"`
 }
 
 func Servers(db *sql.DB) []ServerAPIResponse {
@@ -186,10 +187,11 @@ func ServersWithUptimes(db *sql.DB) []ServerAPIResponseWithUptime {
 
 		defer rows.Close()
 
-		var uptimes []UptimeRow
+		var uptimes []UptimeTemplateItem
 
 		for rows.Next() {
 			var uptime UptimeRow
+			var uptimeTmplItem UptimeTemplateItem
 
 			err := rows.Scan(
 				&uptime.Date,
@@ -201,7 +203,12 @@ func ServersWithUptimes(db *sql.DB) []ServerAPIResponseWithUptime {
 				log.Fatal(err)
 			}
 
-			uptimes = append(uptimes, uptime)
+			uptimeTmplItem.Date = uptime.Date
+			uptimeTmplItem.Uptime = uptime.Uptime
+			uptimeTmplItem.UptimeFmt = fmt.Sprintf("%.3g", uptime.Uptime)
+			uptimeTmplItem.N = uptime.N
+
+			uptimes = append(uptimes, uptimeTmplItem)
 		}
 
 		server.Uptime = uptimes
