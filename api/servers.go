@@ -7,6 +7,7 @@ import (
 )
 
 type StatusesRow struct {
+	ID        int
 	GUID      string
 	Name      string
 	Host      string
@@ -20,7 +21,8 @@ type StatusesRow struct {
 }
 
 type ServerAPIResponse struct {
-	ID      string                   `json:"id"`
+	ID      int                      `json:"-"`
+	GUID    string                   `json:"guid"`
 	Name    string                   `json:"name"`
 	Active  bool                     `json:"active"`
 	Address ServerAPIResponseAddress `json:"address"`
@@ -39,11 +41,22 @@ type ServerAPIResponseStatus struct {
 	LastChecked string `json:"last_checked"`
 }
 
+type ServerAPIResponseWithUptime struct {
+	ID      int                      `json:"id"`
+	GUID    string                   `json:"guid"`
+	Name    string                   `json:"name"`
+	Active  bool                     `json:"active"`
+	Address ServerAPIResponseAddress `json:"address"`
+	Status  ServerAPIResponseStatus  `json:"status"`
+	Uptime  []UptimeRow              `json:"uptime"`
+}
+
 func Servers(db *sql.DB) []ServerAPIResponse {
 	log.Println("API.Servers")
 
 	stmt := `
 	SELECT
+		servers.id,
 		servers.guid,
 		servers.name,
 		servers.host,
@@ -75,6 +88,7 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 
 	for rows.Next() {
 		err := rows.Scan(
+			&status.ID,
 			&status.GUID,
 			&status.Name,
 			&status.Host,
@@ -126,7 +140,8 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 		}
 
 		item = ServerAPIResponse{
-			ID:     statuses[i].GUID,
+			ID:     statuses[i].ID,
+			GUID:   statuses[i].GUID,
 			Name:   statuses[i].Name,
 			Active: statuses[i].IsListed,
 			Address: ServerAPIResponseAddress{
@@ -145,4 +160,54 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 	}
 
 	return finalResponse
+}
+
+func ServersWithUptimes(db *sql.DB) []ServerAPIResponseWithUptime {
+	servers := Servers(db)
+
+	var response []ServerAPIResponseWithUptime
+
+	for i := range servers {
+		var server ServerAPIResponseWithUptime
+
+		server.ID = servers[i].ID
+		server.GUID = servers[i].GUID
+		server.Name = servers[i].Name
+		server.Active = servers[i].Active
+		server.Address = servers[i].Address
+		server.Status = servers[i].Status
+
+		// Add in uptime info
+		log.Printf("Querying uptime for %s", server.ID)
+
+		rows, err := db.Query(QUERY_UPTIME, server.ID)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer rows.Close()
+
+		var uptimes []UptimeRow
+
+		for rows.Next() {
+			var uptime UptimeRow
+
+			err := rows.Scan(
+				&uptime.Date,
+				&uptime.Uptime,
+			)
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			uptimes = append(uptimes, uptime)
+		}
+
+		server.Uptime = uptimes
+		response = append(response, server)
+	}
+
+	return response
 }

@@ -151,10 +151,10 @@ func (a App) ApiUptimes(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a App) Index(w http.ResponseWriter, r *http.Request) {
-	var servers []api.ServerAPIResponse = api.Servers(a.Database)
+	var servers []api.ServerAPIResponseWithUptime = api.ServersWithUptimes(a.Database)
 
 	data := struct {
-		Servers []api.ServerAPIResponse
+		Servers []api.ServerAPIResponseWithUptime
 	}{
 		Servers: servers,
 	}

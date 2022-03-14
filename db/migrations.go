@@ -25,6 +25,9 @@ func CreateServersTable(db *sql.DB) (sql.Result, error) {
 		created_at INTEGER NOT NULL,
 		updated_at INTEGER NOT NULL
 	);
+
+	CREATE INDEX IF NOT EXISTS servers_server_id ON servers (id);
+	CREATE INDEX IF NOT EXISTS servers_server_name ON servers (name);
 	`
 
 	return db.Exec(createTableStatement)
@@ -40,6 +43,8 @@ func CreateStatusesTable(db *sql.DB) (sql.Result, error) {
 		created_at INTEGER NOT NULL,
 		status INTEGER NOT NULL
 	);
+
+	CREATE INDEX IF NOT EXISTS statuses_server_id ON statuses (server_id);
 	`
 
 	return db.Exec(createTableStatement)
