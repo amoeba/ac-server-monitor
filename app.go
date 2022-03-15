@@ -56,7 +56,7 @@ func (a App) Start(no_cron bool) {
 	http.Handle("/export/", lib.LogReq(a.Export))
 	http.Handle("/about/", lib.LogReq(a.About))
 	http.Handle("/static/", lib.LogReq(lib.StaticHandler("static")))
-	http.Handle("/metrics", promhttp.Handler())
+	http.Handle("/metrics/", promhttp.Handler())
 	http.Handle("/", lib.LogReq(a.Index))
 
 	addr := fmt.Sprintf(":%s", a.Port)
