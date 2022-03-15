@@ -16,6 +16,9 @@ import (
 	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/robfig/cron"
 )
 
@@ -53,6 +56,7 @@ func (a App) Start(no_cron bool) {
 	http.Handle("/export/", lib.LogReq(a.Export))
 	http.Handle("/about/", lib.LogReq(a.About))
 	http.Handle("/static/", lib.LogReq(lib.StaticHandler("static")))
+	http.Handle("/metrics", promhttp.Handler())
 	http.Handle("/", lib.LogReq(a.Index))
 
 	addr := fmt.Sprintf(":%s", a.Port)
@@ -191,6 +195,9 @@ func main() {
 	if len(args) == 1 && args[0] == "--no-cron" {
 		no_cron = true
 	}
+
+	// Prometheus
+	prometheus.MustRegister(collectors.NewBuildInfoCollector())
 
 	// Serve
 	app := App{

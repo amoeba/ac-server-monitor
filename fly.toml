@@ -25,6 +25,10 @@ processes = []
   destination = "/data"
   source = "acservermonitor_volume"
 
+[metrics]
+port = 9091 # default for most prometheus clients
+path = "/metrics" # default for most prometheus clients
+
 [[services]]
   http_checks = []
   internal_port = 8080
