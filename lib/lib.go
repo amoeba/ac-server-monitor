@@ -44,8 +44,6 @@ func RenderTemplate(w http.ResponseWriter, name string, data interface{}) {
 }
 
 func StaticHandler(dir string) http.HandlerFunc {
-	log.Printf("statichandler %s", dir)
-
 	return func(w http.ResponseWriter, r *http.Request) {
 		http.StripPrefix("/static", http.FileServer(http.Dir(dir))).ServeHTTP(w, r)
 	}

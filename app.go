@@ -116,7 +116,6 @@ func (a App) ApiServers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a App) ApiUptimes(w http.ResponseWriter, r *http.Request) {
-	log.Println("ApiUptime")
 	w.Header().Set("Content-Type", "application/json")
 
 	// Pull out server id from URL
@@ -154,7 +153,6 @@ func (a App) ApiUptimes(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a App) ApiLogs(w http.ResponseWriter, r *http.Request) {
-	log.Println("ApiLogs")
 	w.Header().Set("Content-Type", "application/json")
 
 	var data []api.LogRow = api.Logs(a.Database)

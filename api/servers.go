@@ -53,8 +53,6 @@ type ServerAPIResponseWithUptime struct {
 }
 
 func Servers(db *sql.DB) []ServerAPIResponse {
-	log.Println("API.Servers")
-
 	stmt := `
 	SELECT
 		servers.id,

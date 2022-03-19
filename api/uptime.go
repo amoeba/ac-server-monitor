@@ -42,8 +42,6 @@ var QUERY_UPTIME = `
 // TODO: Handle the param properly
 // TODO: Handle not found
 func Uptime(db *sql.DB, server_id int) []UptimeRow {
-	log.Println("API.Uptime")
-
 	rows, err := db.Query(QUERY_UPTIME, server_id)
 
 	if err != nil {

@@ -17,8 +17,6 @@ ORDER BY created_at DESC;
 `
 
 func Logs(db *sql.DB) []LogRow {
-	log.Println("API.Logs")
-
 	rows, err := db.Query(QUERY_LOGS)
 
 	if err != nil {
