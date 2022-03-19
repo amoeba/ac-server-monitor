@@ -1,8 +1,10 @@
-package db
+package lib
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
+	"time"
 )
 
 func CreateServersTable(db *sql.DB) (sql.Result, error) {
@@ -48,4 +50,64 @@ func CreateStatusesTable(db *sql.DB) (sql.Result, error) {
 	`
 
 	return db.Exec(createTableStatement)
+}
+
+func CreateLogsTable(db *sql.DB) (sql.Result, error) {
+	log.Println("CreateLogsTable")
+
+	createTableStatement := `
+	CREATE TABLE IF NOT EXISTS logs (
+		id INTEGER NOT NULL PRIMARY KEY,
+		message TEXT NOT NULL,
+		created_at INTEGER NOT NULL
+	);
+	`
+
+	return db.Exec(createTableStatement)
+}
+
+func AutoMigrate(db *sql.DB) error {
+	log.Println("AutoMigrating...")
+
+	var err error
+
+	_, err = CreateServersTable(db)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = CreateStatusesTable(db)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = CreateLogsTable(db)
+
+	if err != nil {
+		return err
+	}
+
+	log.Println("...AutoMigration Done")
+
+	return nil
+}
+
+func WriteLog(db *sql.DB, message string) {
+	log.Println(fmt.Sprintf("WriteLog called with message %s", message))
+
+	queryString := `
+		INSERT INTO logs ( message, created_at )
+		VALUES (?, ?);`
+
+	_, err := db.Exec(
+		queryString,
+		message,
+		time.Now().Unix(),
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }

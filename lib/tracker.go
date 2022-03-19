@@ -2,6 +2,7 @@ package lib
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"time"
 
@@ -71,7 +72,7 @@ func UpdateServerRecord(tx *sql.Tx, s *ServerListItem) error {
 		WHERE guid = ?;
 	`
 
-	updateResult, err := tx.Exec(
+	_, err := tx.Exec(
 		queryString,
 		s.ID,
 		s.Name,
@@ -90,14 +91,6 @@ func UpdateServerRecord(tx *sql.Tx, s *ServerListItem) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	updateRows, updateRowsErr := updateResult.RowsAffected()
-
-	if updateRowsErr != nil {
-		log.Fatal(err)
-	}
-
-	log.Printf("Updated %d row(s)", updateRows)
 
 	return err
 }
@@ -185,6 +178,7 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 
 	if err != nil {
 		up = false
+		WriteLog(db, fmt.Sprintf("Check for server %s failed with error message `%s`.", s.Name, err))
 	}
 
 	query := `
@@ -192,19 +186,11 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 	VALUES (?, ?, ?)
 	`
 
-	txRes, txErr := tx.Exec(query, id, now, up)
+	_, txErr := tx.Exec(query, id, now, up)
 
 	if txErr != nil {
 		log.Fatal(txErr)
 	}
-
-	updateRows, updateRowsErr := txRes.RowsAffected()
-
-	if updateRowsErr != nil {
-		log.Fatal(err)
-	}
-
-	log.Printf("Updated %d row(s)", updateRows)
 
 	return nil
 }

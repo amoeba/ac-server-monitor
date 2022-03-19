@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"monitor/api"
-	"monitor/db"
 	"monitor/lib"
 	"net/http"
 	"os"
@@ -30,12 +29,11 @@ type App struct {
 
 func (a App) Start(no_cron bool) {
 	// migrate
-	migrate_error := db.AutoMigrate(a.Database)
+	migrate_error := lib.AutoMigrate(a.Database)
 
 	if migrate_error != nil {
 		log.Fatalf("Error in AutoMigrate: %s", migrate_error)
 	}
-
 	// cron
 	c := cron.New()
 
@@ -52,6 +50,7 @@ func (a App) Start(no_cron bool) {
 	http.Handle("/favicon.ico", http.NotFoundHandler())
 	http.Handle("/api/servers/", lib.LogReq(a.ApiServers))
 	http.Handle("/api/uptime/", lib.LogReq(a.ApiUptimes))
+	http.Handle("/api/logs/", lib.LogReq(a.ApiLogs))
 	http.Handle("/api/", lib.LogReq(a.Api))
 	http.Handle("/export/", lib.LogReq(a.Export))
 	http.Handle("/about/", lib.LogReq(a.About))
@@ -75,7 +74,7 @@ func (a App) Api(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Routes []string `json:"routes"`
 	}{
-		Routes: []string{"/api/servers", "/api/uptime/:id"},
+		Routes: []string{"/api/servers", "/api/uptime/:id", "/api/logs"},
 	}
 
 	output, err := json.MarshalIndent(data, "", "  ")
@@ -144,6 +143,21 @@ func (a App) ApiUptimes(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var data []api.UptimeRow = api.Uptime(a.Database, server_id)
+
+	output, err := json.MarshalIndent(data, "", "  ")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w.Write(output)
+}
+
+func (a App) ApiLogs(w http.ResponseWriter, r *http.Request) {
+	log.Println("ApiLogs")
+	w.Header().Set("Content-Type", "application/json")
+
+	var data []api.LogRow = api.Logs(a.Database)
 
 	output, err := json.MarshalIndent(data, "", "  ")
 
