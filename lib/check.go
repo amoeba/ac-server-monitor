@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const timeout = 5
+const timeout = 30
 
 // iotoba converts a uint8[] to a byte[]
 func iatoba(input []uint8) []byte {
