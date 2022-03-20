@@ -155,7 +155,7 @@ func (a App) ApiUptimes(w http.ResponseWriter, r *http.Request) {
 func (a App) ApiLogs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var data []api.LogRow = api.Logs(a.Database)
+	var data []api.LogApiItem = api.Logs(a.Database)
 
 	output, err := json.MarshalIndent(data, "", "  ")
 
