@@ -63,8 +63,8 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 		statuses.status,
 		servers.is_listed,
 		servers.updated_at,
-		MAX(statuses.created_at) AS last_seen,
 		MIN(statuses.created_at) AS first_seen,
+		MAX(statuses.created_at) AS last_seen,
 		COUNT(statuses.created_at) as count
 	FROM
 		servers
