@@ -1,26 +1,30 @@
 {{ template "_header.html" }}
 
-<a href="/">Back</a>
+<main>
+ <p>
+   <a href="/">Back</a>
+  </p>
 
-<h2>{{ .Statuses.ServerName }}</h2>
+  <h2>{{ .Statuses.ServerName }}</h2>
 
-<table>
-  <thead>
+  <table>
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Checked At</th>
+        <th>RTT</th>
+        <th>Message</th>
+      </tr>
+    </thead>
+    {{ range $row := .Statuses.Statuses }}
     <tr>
-      <th>Status</th>
-      <th>Checked At</th>
-      <th>RTT</th>
-      <th>Message</th>
+      <td>{{ $row.Status }}</td>
+      <td>{{ $row.CreatedAt }}</td>
+      <td>{{ $row.RTT }}</td>
+      <td>{{ $row.Message }}</td>
     </tr>
-  </thead>
-  {{ range $row := .Statuses.Statuses }}
-  <tr>
-    <td>{{ $row.Status }}</td>
-    <td>{{ $row.CreatedAt }}</td>
-    <td>{{ $row.RTT }}</td>
-    <td>{{ $row.Message }}</td>
-  </tr>
-  {{ end }}
+    {{ end }}
 
-</table>
+  </table>
+</main>
 {{ template "_footer.html" }}

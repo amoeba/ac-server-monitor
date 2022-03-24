@@ -4,15 +4,13 @@ body {
   font-size: 14px;
 }
 
-header *,
-footer * {
-  padding: 0.5em 0;
+header h1 {
+  margin: 0;
+  padding: 0;
 }
 
-header h1 {
-  margin: 0 0 1.5em 0;
-  padding: 0;
-  font-size: 100%;
+header p {
+  margin: 0;
 }
 
 header a,
@@ -37,8 +35,17 @@ header a:hover {
   text-decoration: underline;
 }
 
+main {
+  padding: 1.5em 0 0 0;
+}
+
 footer {
   text-align: center;
+}
+
+footer p {
+  margin: 0;
+  padding: 0;
 }
 
 /* Servers List */

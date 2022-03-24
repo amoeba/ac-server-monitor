@@ -1,20 +1,25 @@
 {{ template "_header.html" }}
-<ul>
-  {{ range $row := .Servers }}
-  <li>
-    <span>{{ if $row.Status.IsOnline }}{{"🟢"}}{{else}}{{"🔴"}}{{end}}</span>
-    <span><a href="/statuses/{{ $row.ID }}">{{ $row.Name }}</a></span>
-    <div class="bars">
-      {{ range $uptime := $row.Uptime }}
-        <div class="bar-container"
-          aria-label="{{ $uptime.Date }}: {{ $uptime.UptimeFmt }}% [avg: {{ $uptime.RTTMean }} ms; range: {{$uptime.RTTMin}}-{{$uptime.RTTMax}} ms] [n={{ $uptime.N }}]"
-          role="tooltip"
-          data-microtip-position="top">
-          <i class="bar" style="height: {{ $uptime.Uptime }}%;"></i>
+<main>
+  <ul>
+    {{ range $row := .Servers }}
+    <li>
+      <span>{{ if $row.Status.IsOnline }}{{"🟢"}}{{else}}{{"🔴"}}{{end}}</span>
+      <span><a href="/statuses/{{ $row.ID }}">{{ $row.Name }}</a></span>
+      <div class="bars">
+        {{ range $uptime := $row.Uptime }}
+          <div class="bar-container"
+            aria-label="{{ $uptime.Date }}: {{ $uptime.UptimeFmt }}% [avg: {{ $uptime.RTTMean }} ms; range: {{$uptime.RTTMin}}-{{$uptime.RTTMax}} ms] [n={{ $uptime.N }}]"
+            role="tooltip"
+            data-microtip-position="top">
+            <i class="bar" style="height: {{ $uptime.Uptime }}%;"></i>
+          </div>
+        {{ end }}
         </div>
-      {{ end }}
-      </div>
-  </li>
-  {{ end }}
-</ul>
+    </li>
+    {{ end }}
+  </ul>
+  <p>
+    List sourced from <a href="https://github.com/acresources/serverslist">acresources/serverslist</a>.
+  </p>
+</main>
 {{ template "_footer.html" }}
