@@ -18,7 +18,7 @@ SELECT status, created_at, rtt, message
 FROM statuses
 WHERE server_id = ?
 ORDER BY created_at DESC
-LIMIT 100;
+LIMIT 20;
 `
 
 type StatusApiResponse struct {
