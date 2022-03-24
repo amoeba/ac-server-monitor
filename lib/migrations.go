@@ -66,6 +66,41 @@ func CreateLogsTable(db *sql.DB) (sql.Result, error) {
 	return db.Exec(createTableStatement)
 }
 
+func AlterStatusesAddRTTAndMessage(db *sql.DB) (sql.Result, error) {
+	log.Println("AlterStatusesAddRTTAndMessage")
+
+	checkIfColExistsStatement := `
+	SELECT message
+	FROM statuses
+	LIMIT 1;
+	`
+
+	checkRes, checkErr := db.Exec(checkIfColExistsStatement)
+
+	if checkErr == nil {
+		log.Print("Skipping migration")
+
+		return checkRes, checkErr
+	}
+
+	alterTableStatement := `
+	ALTER TABLE statuses
+	ADD COLUMN rtt INTEGER;
+	ALTER TABLE statuses
+	ADD COLUMN message TEXT;
+	`
+
+	log.Printf("Running %s", alterTableStatement)
+
+	alterRes, alterErr := db.Exec(alterTableStatement)
+
+	if alterErr != nil {
+		log.Fatal(alterErr)
+	}
+
+	return alterRes, alterErr
+}
+
 func AutoMigrate(db *sql.DB) error {
 	log.Println("AutoMigrating...")
 
@@ -84,6 +119,12 @@ func AutoMigrate(db *sql.DB) error {
 	}
 
 	_, err = CreateLogsTable(db)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = AlterStatusesAddRTTAndMessage(db)
 
 	if err != nil {
 		return err

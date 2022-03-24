@@ -36,14 +36,16 @@ func (a App) Start(no_cron bool) {
 	}
 	// cron
 	c := cron.New()
+	lib.Update(a.Database)
 
 	c.AddFunc("@every 10m", func() {
 		lib.Update(a.Database)
 	})
 
 	if !no_cron {
-		log.Println("Skipping cron.Start() due to getting --offline flag")
 		c.Start()
+	} else {
+		log.Println("Skipping cron.Start() due to getting --offline flag")
 	}
 
 	// web

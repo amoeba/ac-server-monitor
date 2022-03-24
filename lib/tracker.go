@@ -50,8 +50,6 @@ func CreateServerRecord(tx *sql.Tx, s *ServerListItem) error {
 }
 
 func UpdateServerRecord(tx *sql.Tx, s *ServerListItem) error {
-	log.Printf("UpdateServerRecord %s", s.Name)
-
 	now := time.Now().Unix()
 
 	queryString := `
@@ -96,8 +94,6 @@ func UpdateServerRecord(tx *sql.Tx, s *ServerListItem) error {
 }
 
 func CreateOrUpdateServer(tx *sql.Tx, s *ServerListItem) error {
-	log.Printf("CreateOrUpdateServer %s", s.Name)
-
 	// Find
 	res, err := tx.Query(`
 		SELECT id as count
@@ -174,19 +170,25 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 		Port: s.Port,
 	}
 
+	rtt_start := time.Now().UnixMilli()
 	up, err := Check(server)
+	rtt := time.Now().UnixMilli() - rtt_start
 
 	if err != nil {
 		up = false
-		WriteLog(db, fmt.Sprintf("Check for server %s failed with error message `%s`.", s.Name, err))
+		message := fmt.Sprintf("Check for server %s failed with error message `%s`.", s.Name, err)
+		log.Print(message)
+		WriteLog(db, message)
+	} else {
+		log.Printf("Check for server %s succeeded in %d ms", s.Name, rtt)
 	}
 
 	query := `
-	INSERT INTO statuses (server_id, created_at, status)
-	VALUES (?, ?, ?)
+	INSERT INTO statuses (server_id, created_at, status, rtt, message)
+	VALUES (?, ?, ?, ?, ?)
 	`
 
-	_, txErr := tx.Exec(query, id, now, up)
+	_, txErr := tx.Exec(query, id, now, up, rtt, err)
 
 	if txErr != nil {
 		log.Fatal(txErr)
@@ -196,6 +198,8 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 }
 
 func Update(db *sql.DB) error {
+	log.Print("Beginning update...")
+
 	// Fetch latest list
 	lst, err := Fetch()
 
@@ -240,6 +244,8 @@ func Update(db *sql.DB) error {
 			log.Fatal(updateStatusError)
 		}
 	}
+
+	log.Print("Done with update.")
 
 	return nil
 }

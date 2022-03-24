@@ -3,7 +3,9 @@ package lib
 import (
 	"encoding/xml"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"strings"
 )
 
 const serverListURL = "https://raw.githubusercontent.com/acresources/serverslist/master/Servers.xml"
@@ -28,6 +30,15 @@ func Fetch() (ServerList, error) {
 	if err := xml.Unmarshal(body, &sl); err != nil {
 		return ServerList{}, err
 	}
+
+	var b strings.Builder
+
+	for i := range sl.Servers {
+		b.WriteString(sl.Servers[i].Name)
+		b.WriteString(", ")
+	}
+
+	log.Printf("Fetched server list: %s", b.String())
 
 	return sl, err
 }
