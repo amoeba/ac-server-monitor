@@ -52,11 +52,14 @@ func (a App) Start(no_cron bool) {
 	http.Handle("/api/servers/", lib.LogReq(a.ApiServers))
 	http.Handle("/api/uptime/", lib.LogReq(a.ApiUptimes))
 	http.Handle("/api/logs/", lib.LogReq(a.ApiLogs))
+	http.Handle("/api/statuses/", lib.LogReq(a.ApiStatuses))
 	http.Handle("/api/", lib.LogReq(a.Api))
 	http.Handle("/export/", lib.LogReq(a.Export))
 	http.Handle("/about/", lib.LogReq(a.About))
 	http.Handle("/static/", lib.LogReq(lib.StaticHandler("static")))
 	http.Handle("/metrics/", promhttp.Handler())
+	http.Handle("/statuses/", lib.LogReq(a.Statuses))
+
 	http.Handle("/", lib.LogReq(a.Index))
 
 	addr := fmt.Sprintf(":%s", a.Port)
@@ -165,6 +168,75 @@ func (a App) ApiLogs(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(output)
+}
+
+func (a App) ApiStatuses(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	re := regexp.MustCompile(`\/api\/statuses\/(\d+)`)
+	m := re.FindStringSubmatch(r.URL.Path)
+
+	if len(m) != 2 {
+		log.Printf("Failed to extract server_id from %s. Returning HTTP 400.", r.URL.Path)
+
+		w.WriteHeader(400)
+
+		return
+	}
+
+	server_id, err := strconv.Atoi(m[1])
+
+	if err != nil {
+		log.Printf("Failed to convert %s to an int. Returning HTTP 500.", m[1])
+
+		w.WriteHeader(500)
+
+		return
+	}
+
+	var data api.StatusApiResponse = api.Statuses(a.Database, server_id)
+
+	output, err := json.MarshalIndent(data, "", "  ")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w.Write(output)
+}
+
+func (a App) Statuses(w http.ResponseWriter, r *http.Request) {
+	// Pull out server id from URL
+	re := regexp.MustCompile(`\/statuses\/(\d+)`)
+	m := re.FindStringSubmatch(r.URL.Path)
+
+	if len(m) != 2 {
+		log.Printf("Failed to extract server_id from %s. Returning HTTP 400.", r.URL.Path)
+		w.WriteHeader(400)
+
+		return
+	}
+
+	server_id, err := strconv.Atoi(m[1])
+	log.Print(server_id)
+
+	if err != nil {
+		log.Printf("Failed to convert %s to an int. Returning HTTP 500.", m[1])
+
+		w.WriteHeader(500)
+
+		return
+	}
+
+	var statuses api.StatusApiResponse = api.Statuses(a.Database, server_id)
+
+	data := struct {
+		Statuses api.StatusApiResponse
+	}{
+		Statuses: statuses,
+	}
+
+	lib.RenderTemplate(w, "statuses.html", data)
 }
 
 func (a App) Index(w http.ResponseWriter, r *http.Request) {

@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type StatusesRow struct {
+type ServerStatusRow struct {
 	ID        int
 	GUID      string
 	Name      string
@@ -83,8 +83,8 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 
 	defer rows.Close()
 
-	var statuses []StatusesRow
-	var status StatusesRow
+	var statuses []ServerStatusRow
+	var status ServerStatusRow
 
 	for rows.Next() {
 		err := rows.Scan(

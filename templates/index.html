@@ -3,7 +3,7 @@
   {{ range $row := .Servers }}
   <li>
     <span>{{ if $row.Status.IsOnline }}{{"🟢"}}{{else}}{{"🔴"}}{{end}}</span>
-    <span>{{ $row.Name }}</span>
+    <span><a href="/statuses/{{ $row.ID }}">{{ $row.Name }}</a></span>
     <div class="bars">
       {{ range $uptime := $row.Uptime }}
         <div class="bar-container"
