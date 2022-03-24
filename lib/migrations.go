@@ -2,9 +2,7 @@ package lib
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
-	"time"
 )
 
 func CreateServersTable(db *sql.DB) (sql.Result, error) {
@@ -133,22 +131,4 @@ func AutoMigrate(db *sql.DB) error {
 	log.Println("...AutoMigration Done")
 
 	return nil
-}
-
-func WriteLog(db *sql.DB, message string) {
-	log.Println(fmt.Sprintf("WriteLog called with message %s", message))
-
-	queryString := `
-		INSERT INTO logs ( message, created_at )
-		VALUES (?, ?);`
-
-	_, err := db.Exec(
-		queryString,
-		message,
-		time.Now().Unix(),
-	)
-
-	if err != nil {
-		log.Fatal(err)
-	}
 }
