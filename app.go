@@ -78,7 +78,7 @@ func (a App) Api(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Routes []string `json:"routes"`
 	}{
-		Routes: []string{"/api/servers", "/api/uptime/:id", "/api/logs"},
+		Routes: []string{"/api/servers", "/api/uptime/:id", "/api/statuses/:id", "/api/logs"},
 	}
 
 	output, err := json.MarshalIndent(data, "", "  ")
