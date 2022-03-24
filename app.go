@@ -36,7 +36,6 @@ func (a App) Start(no_cron bool) {
 	}
 	// cron
 	c := cron.New()
-	lib.Update(a.Database)
 
 	c.AddFunc("@every 10m", func() {
 		lib.Update(a.Database)
@@ -143,7 +142,7 @@ func (a App) ApiUptimes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var data []api.UptimeRow = api.Uptime(a.Database, server_id)
+	var data []api.UptimeApiItem = api.Uptime(a.Database, server_id)
 
 	output, err := json.MarshalIndent(data, "", "  ")
 

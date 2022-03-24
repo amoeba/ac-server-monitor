@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"math"
 	"time"
 )
 
@@ -195,6 +196,9 @@ func ServersWithUptimes(db *sql.DB) []ServerAPIResponseWithUptime {
 				&uptime.Date,
 				&uptime.Uptime,
 				&uptime.N,
+				&uptime.RTTMin,
+				&uptime.RTTMax,
+				&uptime.RTTMean,
 			)
 
 			if err != nil {
@@ -205,6 +209,9 @@ func ServersWithUptimes(db *sql.DB) []ServerAPIResponseWithUptime {
 			uptimeTmplItem.Uptime = uptime.Uptime
 			uptimeTmplItem.UptimeFmt = fmt.Sprintf("%.3g", uptime.Uptime)
 			uptimeTmplItem.N = uptime.N
+			uptimeTmplItem.RTTMin = SQLNullInt64ToString(uptime.RTTMin)
+			uptimeTmplItem.RTTMax = SQLNullInt64ToString(uptime.RTTMax)
+			uptimeTmplItem.RTTMean = SQLFloat64ToIntString(uptime.RTTMean)
 
 			uptimes = append(uptimes, uptimeTmplItem)
 		}
@@ -214,4 +221,20 @@ func ServersWithUptimes(db *sql.DB) []ServerAPIResponseWithUptime {
 	}
 
 	return response
+}
+
+func SQLNullInt64ToString(input sql.NullInt64) string {
+	if input.Valid {
+		return fmt.Sprintf("%d", input.Int64)
+	} else {
+		return "n/a"
+	}
+}
+
+func SQLFloat64ToIntString(input sql.NullFloat64) string {
+	if input.Valid {
+		return fmt.Sprintf("%d", int(math.Round(input.Float64)))
+	} else {
+		return "n/a"
+	}
 }
