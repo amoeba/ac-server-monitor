@@ -7,6 +7,9 @@
 
   <h2>{{ .Statuses.ServerName }}</h2>
 
+  {{ if not .Statuses.Statuses }}
+  No statuses to show.
+  {{ else }}
   <table>
     <thead>
       <tr>
@@ -26,5 +29,6 @@
     {{ end }}
 
   </table>
+{{ end }}
 </main>
 {{ template "_footer.html" }}
