@@ -218,7 +218,6 @@ func (a App) Statuses(w http.ResponseWriter, r *http.Request) {
 	}
 
 	server_id, err := strconv.Atoi(m[1])
-	log.Print(server_id)
 
 	if err != nil {
 		log.Printf("Failed to convert %s to an int. Returning HTTP 500.", m[1])
