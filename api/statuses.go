@@ -22,8 +22,8 @@ LIMIT 20;
 `
 
 type StatusApiResponse struct {
-	ServerName string `json:"server"`
-	Statuses   []StatusApiStatusItem
+	ServerName string                `json:"server"`
+	Statuses   []StatusApiStatusItem `json:"statuses"`
 }
 
 type StatusApiStatusItem struct {
