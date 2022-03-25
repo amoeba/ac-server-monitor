@@ -188,7 +188,13 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 	VALUES (?, ?, ?, ?, ?)
 	`
 
-	_, txErr := tx.Exec(query, id, now, up, rtt, err)
+	var message string
+
+	if err != nil {
+		message = err.Error()
+	}
+
+	_, txErr := tx.Exec(query, id, now, up, rtt, message)
 
 	if txErr != nil {
 		log.Fatal(txErr)
