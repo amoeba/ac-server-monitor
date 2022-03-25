@@ -22,7 +22,7 @@ FROM logs
 ORDER BY created_at DESC;
 `
 
-func Logs(db *sql.DB) []LogApiItem {
+func Logs(db *sql.DB) *[]LogApiItem {
 	rows, err := db.Query(QUERY_LOGS)
 
 	if err != nil {
@@ -60,5 +60,5 @@ func Logs(db *sql.DB) []LogApiItem {
 		}
 	}
 
-	return logs
+	return &logs
 }
