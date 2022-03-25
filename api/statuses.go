@@ -62,14 +62,14 @@ func GetServerNameById(db *sql.DB, id int) (string, error) {
 	return name, nil
 }
 
-func Statuses(db *sql.DB, server_id int) *StatusApiResponse {
+func Statuses(db *sql.DB, server_id int) StatusApiResponse {
 	var response StatusApiResponse
 
 	// Find the server's name by ID first
 	server_name, getErr := GetServerNameById(db, server_id)
 
 	if getErr != nil {
-		return &response
+		return response
 	}
 
 	response.ServerName = server_name
@@ -125,5 +125,5 @@ func Statuses(db *sql.DB, server_id int) *StatusApiResponse {
 
 	response.Statuses = statuses
 
-	return &response
+	return response
 }

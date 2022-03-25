@@ -159,7 +159,7 @@ func (a App) ApiUptimes(w http.ResponseWriter, r *http.Request) {
 func (a App) ApiLogs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var data *[]api.LogApiItem = api.Logs(a.Database)
+	var data []api.LogApiItem = api.Logs(a.Database)
 
 	output, err := json.MarshalIndent(data, "", "  ")
 
@@ -194,7 +194,7 @@ func (a App) ApiStatuses(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var data *api.StatusApiResponse = api.Statuses(a.Database, server_id)
+	var data api.StatusApiResponse = api.Statuses(a.Database, server_id)
 
 	output, err := json.MarshalIndent(data, "", "  ")
 
@@ -227,10 +227,10 @@ func (a App) Statuses(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var statuses *api.StatusApiResponse = api.Statuses(a.Database, server_id)
+	var statuses api.StatusApiResponse = api.Statuses(a.Database, server_id)
 
 	data := struct {
-		Statuses *api.StatusApiResponse
+		Statuses api.StatusApiResponse
 	}{
 		Statuses: statuses,
 	}

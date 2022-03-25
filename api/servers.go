@@ -151,17 +151,17 @@ func ServersWithUptimes(db *sql.DB) []ServerAPIResponseWithUptime {
 	var response []ServerAPIResponseWithUptime
 
 	for i := range servers {
-		var item ServerAPIResponseWithUptime
+		var server ServerAPIResponseWithUptime
 
-		item.ID = servers[i].ID
-		item.GUID = servers[i].GUID
-		item.Name = servers[i].Name
-		item.Active = servers[i].Active
-		item.Address = servers[i].Address
-		item.Status = servers[i].Status
+		server.ID = servers[i].ID
+		server.GUID = servers[i].GUID
+		server.Name = servers[i].Name
+		server.Active = servers[i].Active
+		server.Address = servers[i].Address
+		server.Status = servers[i].Status
 
 		// Add in uptime info
-		rows, err := db.Query(QUERY_UPTIME, item.ID)
+		rows, err := db.Query(QUERY_UPTIME, server.ID)
 
 		if err != nil {
 			log.Fatal(err)
@@ -199,8 +199,8 @@ func ServersWithUptimes(db *sql.DB) []ServerAPIResponseWithUptime {
 			uptimes = append(uptimes, uptimeTmplItem)
 		}
 
-		item.Uptime = uptimes
-		response = append(response, item)
+		server.Uptime = uptimes
+		response = append(response, server)
 	}
 
 	return response
