@@ -14,11 +14,11 @@ type ServerStatusRow struct {
 	Name      string
 	Host      string
 	Port      string
-	Status    bool
+	Status    sql.NullBool
 	IsListed  bool
 	UpdatedAt int
-	LastSeen  int
-	FirstSeen int
+	LastSeen  sql.NullInt64
+	FirstSeen sql.NullInt64
 	Count     int
 }
 
@@ -108,31 +108,14 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 		}
 	}
 
-	// Add in relative times
 	var finalResponse []ServerAPIResponse
-
 	var item ServerAPIResponse
 
-	var firstSeen time.Time
-	var lastSeen time.Time
-	var lastChecked time.Time
-
 	for i := range statuses {
-		firstSeen = time.Unix(int64(statuses[i].FirstSeen), 0)
-		firstSeenTime, err := firstSeen.UTC().MarshalText()
+		firstSeenTime := PrettyTimeOrNAString(statuses[i].FirstSeen)
+		lastSeenTime := PrettyTimeOrNAString(statuses[i].LastSeen)
 
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		lastSeen = time.Unix(int64(statuses[i].LastSeen), 0)
-		lastSeenTime, err := lastSeen.UTC().MarshalText()
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		lastChecked = time.Unix(int64(statuses[i].UpdatedAt), 0)
+		lastChecked := time.Unix(int64(statuses[i].UpdatedAt), 0)
 		lastCheckedTime, err := lastChecked.UTC().MarshalText()
 
 		if err != nil {
@@ -149,9 +132,9 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 				Port: statuses[i].Port,
 			},
 			Status: ServerAPIResponseStatus{
-				IsOnline:    statuses[i].Status,
-				FirstSeen:   string(firstSeenTime),
-				LastSeen:    string(lastSeenTime),
+				IsOnline:    statuses[i].Status.Bool,
+				FirstSeen:   firstSeenTime,
+				LastSeen:    lastSeenTime,
 				LastChecked: string(lastCheckedTime),
 			},
 		}
@@ -234,6 +217,23 @@ func SQLNullInt64ToString(input sql.NullInt64) string {
 func SQLFloat64ToIntString(input sql.NullFloat64) string {
 	if input.Valid {
 		return fmt.Sprintf("%d", int(math.Round(input.Float64)))
+	} else {
+		return "n/a"
+	}
+}
+
+// Convert an sql.NullInt64 into either a pretty datetime string, "n/a", or
+// "err"
+func PrettyTimeOrNAString(value sql.NullInt64) string {
+	if value.Valid {
+		t := time.Unix(int64(value.Int64), 0)
+		result, err := t.UTC().MarshalText()
+
+		if err != nil {
+			return "err"
+		}
+
+		return string(result)
 	} else {
 		return "n/a"
 	}
