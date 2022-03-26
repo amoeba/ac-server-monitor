@@ -18,7 +18,7 @@ func getStatusMessage(status bool, err error) string {
 		msg := err.Error()
 
 		if strings.Contains(msg, "i/o timeout") {
-			return UP
+			return DOWN
 		}
 
 		if strings.Contains(msg, "read: connection refused") {
