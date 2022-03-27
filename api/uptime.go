@@ -70,9 +70,9 @@ const (
 )
 
 func GetUptimeClass(uptime float64) string {
-	if uptime >= 0.90 {
+	if uptime >= 90 {
 		return UPTIME_CLASS_HIGH
-	} else if uptime >= 0.75 {
+	} else if uptime < 90 && uptime >= 50 {
 		return UPTIME_CLASS_MID
 	} else {
 		return UPTIME_CLASS_LOW
