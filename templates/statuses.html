@@ -1,16 +1,16 @@
 {{ template "_header.html" }}
 
 <main>
- <p>
-   <a href="/">Back</a>
-  </p>
+  <div class="breadcrumb">
+    <a href="/">Back</a>
+  </div>
 
   <h2>{{ .Statuses.ServerName }}</h2>
 
   {{ if not .Statuses.Statuses }}
   No statuses to show.
   {{ else }}
-  <table>
+  <table class="checks">
     <thead>
       <tr>
         <th>Status</th>

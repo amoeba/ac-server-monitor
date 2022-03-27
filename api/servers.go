@@ -191,6 +191,7 @@ func ServersWithUptimes(db *sql.DB) []ServerAPIResponseWithUptime {
 			uptimeTmplItem.Date = uptime.Date
 			uptimeTmplItem.Uptime = uptime.Uptime
 			uptimeTmplItem.UptimeFmt = fmt.Sprintf("%.3g", uptime.Uptime)
+			uptimeTmplItem.UptimeClass = GetUptimeClass(uptime.Uptime)
 			uptimeTmplItem.N = uptime.N
 			uptimeTmplItem.RTTMin = SQLNullInt64ToString(uptime.RTTMin)
 			uptimeTmplItem.RTTMax = SQLNullInt64ToString(uptime.RTTMax)

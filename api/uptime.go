@@ -29,13 +29,14 @@ type UptimeApiItem struct {
 }
 
 type UptimeTemplateItem struct {
-	Date      string
-	Uptime    float64
-	UptimeFmt string
-	N         int
-	RTTMin    string
-	RTTMax    string
-	RTTMean   string
+	Date        string
+	Uptime      float64
+	UptimeFmt   string
+	UptimeClass string
+	N           int
+	RTTMin      string
+	RTTMax      string
+	RTTMean     string
 }
 
 var QUERY_UPTIME = `
@@ -61,6 +62,22 @@ var QUERY_UPTIME = `
 		statuses.server_id = ?
 	GROUP BY day;
 `
+
+const (
+	UPTIME_CLASS_HIGH string = "high"
+	UPTIME_CLASS_MID         = "mid"
+	UPTIME_CLASS_LOW         = "low"
+)
+
+func GetUptimeClass(uptime float64) string {
+	if uptime >= 0.90 {
+		return UPTIME_CLASS_HIGH
+	} else if uptime >= 0.75 {
+		return UPTIME_CLASS_MID
+	} else {
+		return UPTIME_CLASS_LOW
+	}
+}
 
 // TODO: Handle the param properly
 // TODO: Handle not found

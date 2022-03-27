@@ -1,25 +1,28 @@
 {{ template "_header.html" }}
 <main>
-  <ul>
+  <div class="last-updated">⏰ Last updated ten seconds ago</div>
+  <table class="servers">
+    <tbody>
     {{ range $row := .Servers }}
-    <li>
-      <span>{{ if $row.Status.IsOnline }}{{"🟢"}}{{else}}{{"🔴"}}{{end}}</span>
-      <span><a href="/statuses/{{ $row.ID }}">{{ $row.Name }}</a></span>
-      <div class="bars">
-        {{ range $uptime := $row.Uptime }}
-          <div class="bar-container"
-            aria-label="{{ $uptime.Date }}: {{ $uptime.UptimeFmt }}% [avg: {{ $uptime.RTTMean }} ms; range: {{$uptime.RTTMin}}-{{$uptime.RTTMax}} ms] [n={{ $uptime.N }}]"
-            role="tooltip"
-            data-microtip-position="top">
-            <i class="bar" style="height: {{ $uptime.Uptime }}%;"></i>
+    <tr>
+      <td class="server-online">{{ if $row.Status.IsOnline }}{{"🟢"}}{{else}}{{"🔴"}}{{end}}</td>
+      <td class="server-name"><a href="/statuses/{{ $row.ID }}">{{ $row.Name }}</a></td>
+      <td class="server-bars">
+        <div class="bars">
+          {{ range $uptime := $row.Uptime }}
+            <div class="bar-container"
+            data-tippy-content="<div><strong>{{ $uptime.Date }}</strong></div><div>Uptime: {{ $uptime.UptimeFmt }}%</div><div>Mean: {{ $uptime.RTTMean }} ms</div><div>Range: {{$uptime.RTTMin}}-{{$uptime.RTTMax}} ms</div><div>N: {{ $uptime.N }}</div>">
+              <i class="bar {{ $uptime.UptimeClass }}" style="height: {{ $uptime.Uptime }}%;"></i>
+            </div>
+          {{ end }}
           </div>
-        {{ end }}
-        </div>
-    </li>
+        </td>
+      </tr>
     {{ end }}
-  </ul>
-  <p>
+    </tbody>
+  </table>
+  <div class="source-info">
     List sourced from <a href="https://github.com/acresources/serverslist">acresources/serverslist</a>.
-  </p>
+  </div>
 </main>
 {{ template "_footer.html" }}
