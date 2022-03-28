@@ -1,6 +1,6 @@
 {{ template "_header.html" }}
 <main>
-  <div class="last-updated">⏰ Last updated ten seconds ago</div>
+  <div class="last-updated">⏰ Last updated {{ .LastUpdated }}</div>
   <table class="servers">
     <tbody>
     {{ range $row := .Servers }}
