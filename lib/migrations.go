@@ -99,6 +99,16 @@ func AlterStatusesAddRTTAndMessage(db *sql.DB) (sql.Result, error) {
 	return alterRes, alterErr
 }
 
+func CreateStatusesCreatedAtIndex(db *sql.DB) (sql.Result, error) {
+	log.Println("CreateStatusesCreatedAtIndex")
+
+	createIndexStatement := `
+	CREATE INDEX IF NOT EXISTS statuses_date ON statuses (date(created_at, 'unixepoch'));
+	`
+
+	return db.Exec(createIndexStatement)
+}
+
 func AutoMigrate(db *sql.DB) error {
 	log.Println("AutoMigrating...")
 
@@ -123,6 +133,12 @@ func AutoMigrate(db *sql.DB) error {
 	}
 
 	_, err = AlterStatusesAddRTTAndMessage(db)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = CreateStatusesCreatedAtIndex(db)
 
 	if err != nil {
 		return err
