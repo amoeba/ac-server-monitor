@@ -1,3 +1,6 @@
+:root {
+  --width: 20em;
+}
 
 /* General styles */
 body {
@@ -23,18 +26,32 @@ footer {
 
 header {
   border-bottom: 1px solid rgb(202, 28, 236);
-}
-
-footer {
-  border-top: 1px solid rgb(202, 28, 236);
-  text-align: center;
+  line-height: 3em;
 }
 
 header h1 {
   margin: 0;
   padding: 0;
-  font-size: 1em;
-  line-height: 1em;
+  font-size: 1.5em;
+}
+
+header nav {
+  width: var(--width);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+header nav ul {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  gap: 1em;
+  align-items: center;
+}
+
+header nav ul:last-child {
+  justify-content: flex-end;
 }
 
 header a,
@@ -47,19 +64,6 @@ footer a:hover {
   text-decoration: underline;
 }
 
-nav ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  gap: 1em;
-  text-align: right;
-}
-
-nav ul li {
-  align-items: baseline;
-}
-
 header a,
 header a:visited {
   text-decoration: none;
@@ -67,6 +71,10 @@ header a:visited {
 
 header a:hover {
   text-decoration: underline;
+}
+
+header img {
+  display: block;
 }
 
 main {
@@ -82,6 +90,7 @@ main h3 {
 }
 
 footer {
+  border-top: 1px solid rgb(202, 28, 236);
   text-align: center;
 }
 
@@ -94,6 +103,12 @@ footer p {
 
 table {
   border-collapse: collapse;
+}
+
+/* Utility classes */
+.header-contents {
+  max-width: var(---width);
+  margin: 0 auto;
 }
 
 /* Last Updated */
