@@ -13,7 +13,9 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"time"
 
+	"github.com/getsentry/sentry-go"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
@@ -254,6 +256,17 @@ func (a App) Index(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Sentry
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn: os.Getenv("SENTRY_DSN")
+	})
+
+	if err != nil {
+		log.Fatalf("sentry.Init: %s", err)
+	}
+
+	defer sentry.Flush(2 * time.Second)
+
 	// Logging
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
