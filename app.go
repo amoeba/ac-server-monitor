@@ -102,6 +102,7 @@ func (a App) Export(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Header().Set("Content-Length", fmt.Sprintf("%d", len(x)))
 	w.Header().Set("Content-Disposition", "attachment; filename=\"monitor.sqlite3\"")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(x)
