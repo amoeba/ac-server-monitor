@@ -71,6 +71,8 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 		servers
 	LEFT JOIN
 		statuses ON servers.id = statuses.server_id
+	WHERE
+		servers.is_listed IS TRUE
 	GROUP BY servers.id
 	ORDER BY lower(servers.name);
 	`
