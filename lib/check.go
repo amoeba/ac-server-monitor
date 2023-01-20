@@ -8,6 +8,15 @@ import (
 	"time"
 )
 
+// check.go
+//
+// This method was first established by jovrtn <https://github.com/jovrtn> some
+// time after the 2017 server shutdown and was initially used on asheron.net
+// (now defunct). Emulator projects such as GDLE and ACE have added specialized
+// support for the method and client launchers such as ThwargLauncher have
+// replicated the approach. This code is essentially a 1:1 clone of the
+// ThwargLauncher implementation.
+
 const timeout = 30
 
 // iotoba converts a uint8[] to a byte[]
