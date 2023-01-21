@@ -98,8 +98,8 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 			&status.Status,
 			&status.IsListed,
 			&status.UpdatedAt,
-			&status.LastSeen,
 			&status.FirstSeen,
+			&status.LastSeen,
 			&status.Count,
 		)
 
