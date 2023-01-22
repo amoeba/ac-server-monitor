@@ -67,7 +67,7 @@ footer a {
 
 header a:hover,
 footer a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 header a,
