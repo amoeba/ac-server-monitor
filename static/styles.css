@@ -54,6 +54,12 @@ header nav ul:last-child {
   justify-content: flex-end;
 }
 
+header nav ul:first-child a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 header a,
 footer a {
   color: rgb(233, 233, 233);
@@ -114,9 +120,13 @@ table {
 /* Last Updated */
 .last-updated,
 .source-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   font-size: 80%;
-  color: rgb(100, 100, 100);
-  text-align: center;
+  color: #646464;
+  fill: #646464;
   padding: 0.5em 0;
 }
 
