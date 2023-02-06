@@ -93,22 +93,14 @@ func UpdateServerRecord(tx *sql.Tx, s *ServerListItem) error {
 	return err
 }
 
-func UpdateServerLastSeen(db *sql.DB, server_id int, now int64) error {
+func UpdateServerLastSeen(tx *sql.Tx, server_id int, now int64) error {
 	query := `
 		UPDATE servers
 		SET last_seen = ?
 		WHERE id = ?
 	`
 
-	tx, err := db.Begin()
-
-	if err != nil {
-		return err
-	}
-
-	defer tx.Commit()
-
-	_, err = tx.Exec(query, now, server_id)
+	_, err := tx.Exec(query, now, server_id)
 
 	if err != nil {
 		return err
@@ -225,11 +217,13 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 		log.Fatal(txErr)
 	}
 
-	// Update last_seen value in servers table
-	updateResult := UpdateServerLastSeen(db, id, now)
+	// Update last_seen value in servers table if up
+	if up {
+		updateResult := UpdateServerLastSeen(tx, id, now)
 
-	if updateResult != nil {
-		log.Fatal(updateResult)
+		if updateResult != nil {
+			log.Fatal(updateResult)
+		}
 	}
 
 	return nil

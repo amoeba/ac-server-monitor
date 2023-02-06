@@ -113,7 +113,7 @@ func AlterServersAddLastSeen(db *sql.DB) (sql.Result, error) {
 	log.Println("AlterServersAddLastSeen")
 
 	createIndexStatement := `
-	ALTER TABLE servers ADD last_seen INTEGER IF NOT EXISTS last_seen;
+	ALTER TABLE servers ADD last_seen INTEGER;
 	`
 
 	return db.Exec(createIndexStatement)
