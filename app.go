@@ -29,21 +29,24 @@ type App struct {
 	T        *template.Template
 }
 
-func (a App) Start(no_cron bool) {
+func (a App) Start(offline bool) {
 	// migrate
 	migrate_error := lib.AutoMigrate(a.Database)
 
 	if migrate_error != nil {
 		log.Fatalf("Error in AutoMigrate: %s", migrate_error)
 	}
+
 	// cron
-	c := cron.New()
 
-	c.AddFunc("@every 10m", func() {
-		lib.Update(a.Database)
-	})
+	if !offline {
+		c := cron.New()
 
-	if !no_cron {
+		c.AddFunc("@every 10m", func() {
+			lib.Update(a.Database)
+		})
+
+		log.Println("Starting cron")
 		c.Start()
 	} else {
 		log.Println("Skipping cron.Start() due to getting --offline flag")
@@ -66,7 +69,7 @@ func (a App) Start(no_cron bool) {
 
 	addr := fmt.Sprintf(":%s", a.Port)
 
-	log.Printf("Starting app on %s", addr)
+	log.Printf("Starting app on %s, offline mode is %t", addr, offline)
 	log.Fatal(http.ListenAndServe(addr, nil))
 }
 
@@ -290,12 +293,11 @@ func main() {
 		return
 	}
 
-	// (Hackily) handle a --no-cron command line arg so we can start the
-	// app with server fetching and checking off.
-	no_cron := false
+	// Handle --offline
+	offline := false
 
-	if len(args) == 1 && args[0] == "--no-cron" {
-		no_cron = true
+	if len(args) == 1 && args[0] == "--offline" {
+		offline = true
 	}
 
 	// Prometheus
@@ -307,5 +309,5 @@ func main() {
 		Database: database,
 	}
 
-	app.Start(no_cron)
+	app.Start(offline)
 }
