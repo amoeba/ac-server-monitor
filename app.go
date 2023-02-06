@@ -262,8 +262,8 @@ func (a App) Index(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// Sentry
 	err := sentry.Init(sentry.ClientOptions{
-		Dsn: os.Getenv("SENTRY_DSN"),
-                TracesSampleRate: 0.2,
+		Dsn:              os.Getenv("SENTRY_DSN"),
+		TracesSampleRate: 0.2,
 	})
 
 	if err != nil {
