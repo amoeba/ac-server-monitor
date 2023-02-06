@@ -109,6 +109,16 @@ func CreateStatusesCreatedAtIndex(db *sql.DB) (sql.Result, error) {
 	return db.Exec(createIndexStatement)
 }
 
+func AlterServersAddLastSeen(db *sql.DB) (sql.Result, error) {
+	log.Println("AlterServersAddLastSeen")
+
+	createIndexStatement := `
+	ALTER TABLE servers ADD last_seen INTEGER IF NOT EXISTS last_seen;
+	`
+
+	return db.Exec(createIndexStatement)
+}
+
 func AutoMigrate(db *sql.DB) error {
 	log.Println("AutoMigrating...")
 
@@ -143,6 +153,9 @@ func AutoMigrate(db *sql.DB) error {
 	if err != nil {
 		return err
 	}
+
+	// Ignore errors here since SQLite lets this pass silently
+	_, err = AlterServersAddLastSeen(db)
 
 	log.Println("...AutoMigration Done")
 

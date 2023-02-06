@@ -93,6 +93,30 @@ func UpdateServerRecord(tx *sql.Tx, s *ServerListItem) error {
 	return err
 }
 
+func UpdateServerLastSeen(db *sql.DB, server_id int, now int64) error {
+	query := `
+		UPDATE servers
+		SET last_seen = ?
+		WHERE id = ?
+	`
+
+	tx, err := db.Begin()
+
+	if err != nil {
+		return err
+	}
+
+	defer tx.Commit()
+
+	_, err = tx.Exec(query, now, server_id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func CreateOrUpdateServer(tx *sql.Tx, s *ServerListItem) error {
 	// Find
 	res, err := tx.Query(`
@@ -183,6 +207,7 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 		log.Printf("Check for server %s succeeded in %d ms", s.Name, rtt)
 	}
 
+	// Add new row to statuses table
 	query := `
 	INSERT INTO statuses (server_id, created_at, status, rtt, message)
 	VALUES (?, ?, ?, ?, ?)
@@ -198,6 +223,13 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 
 	if txErr != nil {
 		log.Fatal(txErr)
+	}
+
+	// Update last_seen value in servers table
+	updateResult := UpdateServerLastSeen(db, id, now)
+
+	if updateResult != nil {
+		log.Fatal(updateResult)
 	}
 
 	return nil

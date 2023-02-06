@@ -6,6 +6,8 @@ import (
 	"log"
 	"math"
 	"time"
+
+	"gopkg.in/guregu/null.v4"
 )
 
 type ServerStatusRow struct {
@@ -18,8 +20,6 @@ type ServerStatusRow struct {
 	IsListed  bool
 	UpdatedAt int
 	LastSeen  sql.NullInt64
-	FirstSeen sql.NullInt64
-	Count     int
 }
 
 type ServerAPIResponse struct {
@@ -37,10 +37,9 @@ type ServerAPIResponseAddress struct {
 }
 
 type ServerAPIResponseStatus struct {
-	IsOnline    bool   `json:"online"`
-	FirstSeen   string `json:"first_seen"`
-	LastSeen    string `json:"last_seen"`
-	LastChecked string `json:"last_checked"`
+	IsOnline    bool        `json:"online"`
+	LastSeen    null.String `json:"last_seen"`
+	LastChecked string      `json:"last_checked"`
 }
 
 type ServerAPIResponseWithUptime struct {
@@ -64,9 +63,7 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 		statuses.status,
 		servers.is_listed,
 		servers.updated_at,
-		MIN(statuses.created_at) AS first_seen,
-		MAX(statuses.created_at) AS last_seen,
-		COUNT(statuses.created_at) as count
+		servers.last_seen
 	FROM
 		servers
 	LEFT JOIN
@@ -98,9 +95,7 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 			&status.Status,
 			&status.IsListed,
 			&status.UpdatedAt,
-			&status.FirstSeen,
 			&status.LastSeen,
-			&status.Count,
 		)
 
 		if err != nil {
@@ -114,9 +109,7 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 	var item ServerAPIResponse
 
 	for i := range statuses {
-		firstSeenTime := PrettyTimeOrNAString(statuses[i].FirstSeen)
-		lastSeenTime := PrettyTimeOrNAString(statuses[i].LastSeen)
-
+		lastSeenTime := PrettyTimeOrNullString(statuses[i].LastSeen)
 		lastChecked := time.Unix(int64(statuses[i].UpdatedAt), 0)
 		lastCheckedTime, err := lastChecked.UTC().MarshalText()
 
@@ -135,7 +128,6 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 			},
 			Status: ServerAPIResponseStatus{
 				IsOnline:    statuses[i].Status.Bool,
-				FirstSeen:   firstSeenTime,
 				LastSeen:    lastSeenTime,
 				LastChecked: string(lastCheckedTime),
 			},
@@ -239,5 +231,22 @@ func PrettyTimeOrNAString(value sql.NullInt64) string {
 		return string(result)
 	} else {
 		return "n/a"
+	}
+}
+
+// Convert an sql.NullInt64 into either a pretty datetime string, null
+// via null.String
+func PrettyTimeOrNullString(value sql.NullInt64) null.String {
+	if value.Valid {
+		t := time.Unix(int64(value.Int64), 0)
+		result, err := t.UTC().MarshalText()
+
+		if err != nil {
+			return null.StringFrom("err")
+		}
+
+		return null.StringFrom(string(result))
+	} else {
+		return null.String{}
 	}
 }
