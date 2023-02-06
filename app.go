@@ -291,7 +291,7 @@ func main() {
 	}
 
 	// (Hackily) handle a --no-cron command line arg so we can start the
-	// app with server fetchiing and checking off.
+	// app with server fetching and checking off.
 	no_cron := false
 
 	if len(args) == 1 && args[0] == "--no-cron" {
