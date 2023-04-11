@@ -12,7 +12,7 @@ import (
 func CreateServerRecord(tx *sql.Tx, s *ServerListItem) error {
 	log.Printf("CreateServerRecord %s", s.Name)
 
-	now := time.Now().Unix()
+	now := time.Now().UTC().Unix()
 
 	queryString := `
 		INSERT INTO servers ( guid, name, description, emu, host, port, type, status, website_url, discord_url, is_listed, created_at, updated_at )
@@ -50,7 +50,7 @@ func CreateServerRecord(tx *sql.Tx, s *ServerListItem) error {
 }
 
 func UpdateServerRecord(tx *sql.Tx, s *ServerListItem) error {
-	now := time.Now().Unix()
+	now := time.Now().UTC().Unix()
 
 	queryString := `
 		UPDATE servers
@@ -143,7 +143,7 @@ func CreateOrUpdateServer(tx *sql.Tx, s *ServerListItem) error {
 }
 
 func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
-	now := time.Now().Unix()
+	now := time.Now().UTC().Unix()
 
 	// Get the server's ID
 	res, err := db.Query(`
@@ -186,9 +186,9 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 		Port: s.Port,
 	}
 
-	rtt_start := time.Now().UnixMilli()
+	rtt_start := time.Now().UTC().UnixMilli()
 	up, err := Check(server)
-	rtt := time.Now().UnixMilli() - rtt_start
+	rtt := time.Now().UTC().UnixMilli() - rtt_start
 
 	if err != nil {
 		up = false

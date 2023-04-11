@@ -36,7 +36,7 @@ func WriteLog(db *sql.DB, message string) {
 	_, err := db.Exec(
 		queryString,
 		message,
-		time.Now().Unix(),
+		time.Now().UTC().Unix(),
 	)
 
 	if err != nil {
