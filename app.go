@@ -29,7 +29,7 @@ type App struct {
 	T        *template.Template
 }
 
-func (a App) Start(offline bool) {
+func (a App) Start(offline bool, check_on_startup bool) {
 	// migrate
 	migrate_error := lib.AutoMigrate(a.Database)
 
@@ -37,8 +37,13 @@ func (a App) Start(offline bool) {
 		log.Fatalf("Error in AutoMigrate: %s", migrate_error)
 	}
 
-	// cron
+	// Check on startup if flag provided
+	if check_on_startup {
+		log.Println("Doing startup check...")
+		lib.Update(a.Database)
+	}
 
+	// cron
 	if !offline {
 		c := cron.New()
 
@@ -296,8 +301,16 @@ func main() {
 	// Handle --offline
 	offline := false
 
-	if len(args) == 1 && args[0] == "--offline" {
+	if len(args) >= 1 && args[0] == "--offline" {
 		offline = true
+	}
+
+	// Handle --check-on-startup
+	// TODO: Use a more flexible args handler
+	check_on_startup := false
+
+	if len(args) >= 2 && args[1] == "--check-on-startup" {
+		check_on_startup = true
 	}
 
 	// Prometheus
@@ -309,5 +322,5 @@ func main() {
 		Database: database,
 	}
 
-	app.Start(offline)
+	app.Start(offline, check_on_startup)
 }
