@@ -11,16 +11,15 @@ import (
 )
 
 type ServerStatusRow struct {
-	ID                int
-	GUID              string
-	Name              string
-	Host              string
-	Port              string
-	Status            sql.NullBool
-	StatusLastUpdated int
-	IsListed          bool
-	UpdatedAt         int
-	LastSeen          sql.NullInt64
+	ID        int
+	GUID      string
+	Name      string
+	Host      string
+	Port      string
+	Status    sql.NullBool
+	IsListed  bool
+	UpdatedAt int
+	LastSeen  sql.NullInt64
 }
 
 type ServerAPIResponse struct {
@@ -62,7 +61,6 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 		servers.host,
 		servers.port,
 		statuses.status,
-		MAX(statuses.created_at) AS status_last_updated,
 		servers.is_listed,
 		servers.updated_at,
 		servers.last_seen
@@ -95,7 +93,6 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 			&status.Host,
 			&status.Port,
 			&status.Status,
-			&status.StatusLastUpdated,
 			&status.IsListed,
 			&status.UpdatedAt,
 			&status.LastSeen,
