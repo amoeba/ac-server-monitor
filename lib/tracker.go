@@ -229,18 +229,10 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 	return nil
 }
 
-func Update(db *sql.DB) error {
-	log.Print("Beginning update...")
-
-	// Fetch latest list
-	lst, err := Fetch()
-
-	if err != nil {
-		log.Fatalf("Error fetching server list in update: %s", err)
-	}
-
-	// open a tx
+func UpdateServersTable(db *sql.DB, list ServerList) {
 	tx, err := db.Begin()
+
+	defer tx.Commit()
 
 	if err != nil {
 		log.Fatal(err)
@@ -257,18 +249,29 @@ func Update(db *sql.DB) error {
 	}
 
 	// Go through each item in the list and
-	for i := range lst.Servers {
-		upsertErr := CreateOrUpdateServer(tx, &lst.Servers[i])
+	for i := range list.Servers {
+		upsertErr := CreateOrUpdateServer(tx, &list.Servers[i])
 
 		if upsertErr != nil {
 			log.Fatal(upsertErr)
 		}
 	}
+}
 
-	// Force a commit now before moving on to updating statuses
-	tx.Commit()
+func Update(db *sql.DB) error {
+	log.Print("Beginning update...")
 
-	// Get statuses for each server in the list
+	// Fetch latest list
+	lst, err := Fetch()
+
+	if err != nil {
+		log.Fatalf("Error fetching server list in update: %s", err)
+	}
+
+	// First we sync the list with the servers table
+	UpdateServersTable(db, lst)
+
+	// Then we get statuses for each server in the list
 	for i := range lst.Servers {
 		updateStatusError := UpdateStatusForServer(db, &lst.Servers[i])
 
