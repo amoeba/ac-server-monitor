@@ -5,7 +5,17 @@
     <tbody>
     {{ range $row := .Servers }}
     <tr>
-      <td class="server-online">{{ if $row.Status.IsOnline }}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#00AA00" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><polyline points="172 104 113.3 160 84 124" fill="none" stroke="#00AA00" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline><circle cx="128" cy="128" r="96" fill="none" stroke="#00AA00" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></circle></svg>{{else}}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#aa0000" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="128" cy="128" r="96" fill="none" stroke="#aa0000" stroke-miterlimit="10" stroke-width="16"></circle><line x1="160" y1="96" x2="96" y2="160" fill="none" stroke="#aa0000" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><line x1="160" y1="160" x2="96" y2="96" fill="none" stroke="#aa0000" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line></svg>{{end}}</td>
+      <td class="server-status">
+        {{ if $row.Status.IsOnline.Valid }}
+          {{ if $row.Status.IsOnline.Bool }}
+            ✅
+          {{ else }}
+            ❌
+          {{ end }}
+        {{ else }}
+          ❔
+        {{ end }}
+      </td>
       <td class="server-name"><a href="/statuses/{{ $row.ID }}">{{ $row.Name }}</a></td>
       <td class="server-bars">
         <div class="bars">
