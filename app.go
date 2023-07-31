@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -29,7 +30,7 @@ type App struct {
 	T        *template.Template
 }
 
-func (a App) Start(offline bool, check_on_startup bool) {
+func (a App) Start(no_cron bool, sync_on_startup bool, check_on_startup bool) {
 	// migrate
 	migrate_error := lib.AutoMigrate(a.Database)
 
@@ -37,14 +38,26 @@ func (a App) Start(offline bool, check_on_startup bool) {
 		log.Fatalf("Error in AutoMigrate: %s", migrate_error)
 	}
 
-	// Check on startup if flag provided
+	if sync_on_startup {
+		log.Println("Doing startup sync...")
+		lst, err := lib.Fetch()
+
+		if err != nil {
+			log.Fatalf("Error fetching server list in update: %s", err)
+		}
+
+		lib.UpdateServersTable(a.Database, lst)
+		log.Println("...Done doing startup sync")
+	}
+
 	if check_on_startup {
 		log.Println("Doing startup check...")
 		lib.Update(a.Database)
+		log.Println("...Done doing startup check")
 	}
 
 	// cron
-	if !offline {
+	if !no_cron {
 		c := cron.New()
 
 		c.AddFunc("@every 10m", func() {
@@ -74,7 +87,7 @@ func (a App) Start(offline bool, check_on_startup bool) {
 
 	addr := fmt.Sprintf(":%s", a.Port)
 
-	log.Printf("Starting app on %s, offline mode is %t", addr, offline)
+	log.Printf("Starting app on %s, offline mode is %t", addr, no_cron)
 	log.Fatal(http.ListenAndServe(addr, nil))
 }
 
@@ -265,6 +278,12 @@ func (a App) Index(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Command line flags
+	flag_no_cron := flag.Bool("no-cron", false, "Whether to periodically check servers. Defaults to false.")
+	flag_sync_on_startup := flag.Bool("sync_on_startup", false, "Whether to sync with the community servers list on startup. Defaults to false.")
+	flag_check_on_startup := flag.Bool("check_on_startup", false, "Whether to sync and check servers on startup. Defaults to false.")
+	flag.Parse()
+
 	// Sentry
 	err := sentry.Init(sentry.ClientOptions{
 		Dsn:              os.Getenv("SENTRY_DSN"),
@@ -298,21 +317,6 @@ func main() {
 		return
 	}
 
-	// Handle --offline
-	offline := false
-
-	if len(args) >= 1 && args[0] == "--offline" {
-		offline = true
-	}
-
-	// Handle --check-on-startup
-	// TODO: Use a more flexible args handler
-	check_on_startup := false
-
-	if len(args) >= 2 && args[1] == "--check-on-startup" {
-		check_on_startup = true
-	}
-
 	// Prometheus
 	prometheus.MustRegister(collectors.NewBuildInfoCollector())
 
@@ -322,5 +326,5 @@ func main() {
 		Database: database,
 	}
 
-	app.Start(offline, check_on_startup)
+	app.Start(*flag_no_cron, *flag_sync_on_startup, *flag_check_on_startup)
 }
