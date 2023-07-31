@@ -1,42 +1,18 @@
-:root {
-  --width: 20em;
-}
-
 /* General styles */
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-size: 16px;
   margin: 0;
-  padding: 0;
-  background-color: rgba(189, 142, 233, 0.479);
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
-header,
-footer {
-  display: flex;
-  gap: 1em;
-  padding: 0.25em 0.5em;
-  background-color: rgb(104, 13, 122);
-  color: white;
-}
-
-header {
-  border-bottom: 1px solid rgb(202, 28, 236);
-  line-height: 3em;
+  padding: 1em;
 }
 
 header h1 {
   margin: 0;
   padding: 0;
-  font-size: 1.5em;
 }
 
 header nav {
-  width: var(--width);
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
@@ -47,45 +23,23 @@ header nav ul {
   margin: 0;
   padding: 0;
   gap: 1em;
-  align-items: center;
+}
+
+header nav a {
+  text-decoration: none;
+}
+
+header nav li:first-child a:visited {
+  color: blue;
 }
 
 header nav ul:last-child {
   justify-content: flex-end;
 }
 
-header nav ul:first-child a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-header a,
-footer a {
-  color: rgb(233, 233, 233);
-}
-
 header a:hover,
 footer a:hover {
   text-decoration: none;
-}
-
-header a,
-header a:visited {
-  text-decoration: none;
-}
-
-header a:hover {
-  text-decoration: underline;
-}
-
-header img {
-  display: block;
-}
-
-main {
-  padding: 0.5em 0.25em;
-  flex-grow: 1;
 }
 
 main h2,
@@ -95,51 +49,21 @@ main h3 {
   margin: 0;
 }
 
-footer {
-  border-top: 1px solid rgb(202, 28, 236);
-  text-align: center;
-}
-
-footer p {
-  margin: 0;
-  padding: 0;
-  display: block;
-  width: 100%
-}
-
 table {
   border-collapse: collapse;
 }
 
-/* Utility classes */
-.header-contents {
-  max-width: var(---width);
-  margin: 0 auto;
-}
-
-/* Last Updated */
-.last-updated,
-.source-info {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  font-size: 80%;
-  color: #646464;
-  fill: #646464;
-  padding: 0.5em 0;
-}
-
 /* Servers List */
-.servers {
-  width: 100%;
-  max-width: 20em;
-  margin: 0 auto;
+table.servers a {
+  text-decoration: none;
 }
 
-.servers a {
-  color: rgb(49, 47, 38);
-  text-decoration: none;
+table.servers a:visited {
+  color: blue;
+}
+
+table.servers td {
+  line-height: 1.5em;
 }
 
 /* Bars */
@@ -178,15 +102,6 @@ table {
   background-color: rgba(216, 25, 25, 0.5);
 }
 
-/* Utility Styles */
-.breadcrumb {
-  margin-bottom: 1em;
-}
-
-.breadcrumb a {
-  color: black;
-}
-
 /* Uptime Checks Table */
 .checks th,
 .checks td {
@@ -194,7 +109,7 @@ table {
 }
 
 .checks th {
-  background-color: rgba(144, 87, 155, 0.226);
+  background-color: #eee;
 }
 
 .checks th:first-child {
@@ -203,4 +118,9 @@ table {
 
 .checks th:last-child {
   border-radius: 0 3px 0 0;
+}
+
+/* Utility Styles */
+.breadcrumb a:visited {
+  color: blue;
 }
