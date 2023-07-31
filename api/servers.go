@@ -11,15 +11,16 @@ import (
 )
 
 type ServerStatusRow struct {
-	ID        int
-	GUID      string
-	Name      string
-	Host      string
-	Port      string
-	Status    sql.NullBool
-	IsListed  bool
-	UpdatedAt int
-	LastSeen  sql.NullInt64
+	ID           int
+	GUID         string
+	Name         string
+	Host         string
+	Port         string
+	Status       sql.NullBool
+	MaxCreatedAt sql.NullInt32
+	IsListed     bool
+	UpdatedAt    int
+	LastSeen     sql.NullInt64
 }
 
 type ServerAPIResponse struct {
@@ -37,9 +38,9 @@ type ServerAPIResponseAddress struct {
 }
 
 type ServerAPIResponseStatus struct {
-	IsOnline    bool        `json:"online"`
-	LastSeen    null.String `json:"last_seen"`
-	LastChecked string      `json:"last_checked"`
+	IsOnline    sql.NullBool `json:"online"`
+	LastSeen    null.String  `json:"last_seen"`
+	LastChecked string       `json:"last_checked"`
 }
 
 type ServerAPIResponseWithUptime struct {
@@ -61,6 +62,7 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 		servers.host,
 		servers.port,
 		statuses.status,
+		MAX(statuses.created_at) AS max_created_at,
 		servers.is_listed,
 		servers.updated_at,
 		servers.last_seen
@@ -93,6 +95,7 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 			&status.Host,
 			&status.Port,
 			&status.Status,
+			&status.MaxCreatedAt,
 			&status.IsListed,
 			&status.UpdatedAt,
 			&status.LastSeen,
@@ -127,7 +130,7 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 				Port: statuses[i].Port,
 			},
 			Status: ServerAPIResponseStatus{
-				IsOnline:    statuses[i].Status.Bool,
+				IsOnline:    statuses[i].Status,
 				LastSeen:    lastSeenTime,
 				LastChecked: string(lastCheckedTime),
 			},
