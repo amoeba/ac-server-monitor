@@ -119,6 +119,16 @@ func AlterServersAddLastSeen(db *sql.DB) (sql.Result, error) {
 	return db.Exec(createIndexStatement)
 }
 
+func AlterServersAddIsOnline(db *sql.DB) (sql.Result, error) {
+	log.Println("AlterServersAddIsOnline")
+
+	createIndexStatement := `
+	ALTER TABLE servers ADD is_online INTEGER;
+	`
+
+	return db.Exec(createIndexStatement)
+}
+
 func AutoMigrate(db *sql.DB) error {
 	log.Println("AutoMigrating...")
 
@@ -156,6 +166,8 @@ func AutoMigrate(db *sql.DB) error {
 
 	// Ignore errors here since SQLite lets this pass silently
 	_, err = AlterServersAddLastSeen(db)
+	_, err = AlterServersAddIsOnline(db)
+
 
 	log.Println("...AutoMigration Done")
 

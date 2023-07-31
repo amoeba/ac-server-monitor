@@ -109,6 +109,22 @@ func UpdateServerLastSeen(tx *sql.Tx, server_id int, now int64) error {
 	return nil
 }
 
+func UpdateServerIsOnline(tx *sql.Tx, server_id int, is_online bool) error {
+	query := `
+		UPDATE servers
+		SET is_online = ?
+		WHERE id = ?
+	`
+
+	_, err := tx.Exec(query, is_online, server_id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func CreateOrUpdateServer(tx *sql.Tx, s *ServerListItem) error {
 	// Find
 	res, err := tx.Query(`
@@ -219,11 +235,18 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 
 	// Update last_seen value in servers table if up
 	if up {
-		updateResult := UpdateServerLastSeen(tx, id, now)
+		updateServerLastSeenResult := UpdateServerLastSeen(tx, id, now)
 
-		if updateResult != nil {
-			log.Fatal(updateResult)
+		if updateServerLastSeenResult != nil {
+			log.Fatal(updateServerLastSeenResult)
 		}
+	}
+
+	// Update is_online with what we found
+	updateServerIsOnlineResult := UpdateServerIsOnline(tx, id, up)
+
+	if updateServerIsOnlineResult != nil {
+		log.Fatal(updateServerIsOnlineResult)
 	}
 
 	return nil

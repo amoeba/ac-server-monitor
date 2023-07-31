@@ -16,9 +16,8 @@ type ServerStatusRow struct {
 	Name         string
 	Host         string
 	Port         string
-	Status       sql.NullBool
-	MaxCreatedAt sql.NullInt32
 	IsListed     bool
+	IsOnline     sql.NullBool
 	UpdatedAt    int
 	LastSeen     sql.NullInt64
 }
@@ -38,7 +37,7 @@ type ServerAPIResponseAddress struct {
 }
 
 type ServerAPIResponseStatus struct {
-	IsOnline    sql.NullBool `json:"online"`
+	IsOnline    null.Bool `json:"online"`
 	LastSeen    null.String  `json:"last_seen"`
 	LastChecked string       `json:"last_checked"`
 }
@@ -61,15 +60,12 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 		servers.name,
 		servers.host,
 		servers.port,
-		statuses.status,
-		MAX(statuses.created_at) AS max_created_at,
 		servers.is_listed,
+		servers.is_online,
 		servers.updated_at,
 		servers.last_seen
 	FROM
 		servers
-	LEFT JOIN
-		statuses ON servers.id = statuses.server_id
 	WHERE
 		servers.is_listed IS TRUE
 	GROUP BY servers.id
@@ -94,9 +90,8 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 			&status.Name,
 			&status.Host,
 			&status.Port,
-			&status.Status,
-			&status.MaxCreatedAt,
 			&status.IsListed,
+			&status.IsOnline,
 			&status.UpdatedAt,
 			&status.LastSeen,
 		)
@@ -112,6 +107,7 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 	var item ServerAPIResponse
 
 	for i := range statuses {
+		isOnline := BoolOrNull(statuses[i].IsOnline)
 		lastSeenTime := PrettyTimeOrNullString(statuses[i].LastSeen)
 		lastChecked := time.Unix(int64(statuses[i].UpdatedAt), 0)
 		lastCheckedTime, err := lastChecked.UTC().MarshalText()
@@ -130,7 +126,7 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 				Port: statuses[i].Port,
 			},
 			Status: ServerAPIResponseStatus{
-				IsOnline:    statuses[i].Status,
+				IsOnline:    isOnline,
 				LastSeen:    lastSeenTime,
 				LastChecked: string(lastCheckedTime),
 			},
@@ -251,5 +247,13 @@ func PrettyTimeOrNullString(value sql.NullInt64) null.String {
 		return null.StringFrom(string(result))
 	} else {
 		return null.String{}
+	}
+}
+
+func BoolOrNull(value sql.NullBool) null.Bool {
+	if value.Valid {
+		return null.BoolFrom(value.Bool)
+	} else {
+		return null.Bool{}
 	}
 }
