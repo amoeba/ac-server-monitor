@@ -2,11 +2,11 @@
 
 Status and historical uptime information for Asheron's Call [private servers](https://github.com/acresources/serverslist).
 
-https://servers.treestats.net
+View it live at <https://servers.treestats.net>.
 
 ## How this works
 
-Every ten minutes, we fetch the [wild west server list](https://github.com/acresources/serverslist) and check whether server is up or down by sending a login packet.
+Every ten minutes, we fetch the [community server list](https://github.com/acresources/serverslist) and check whether server is up or down by sending a login packet.
 The result is stored and the application shows current and historical status for each server.
 
 ## API
