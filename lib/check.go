@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
+	"log"
 	"net"
 	"time"
 )
@@ -90,4 +91,17 @@ func Check(srv Server) (bool, error) {
 	}
 
 	return CheckResponseLength(nbytes), nil
+}
+
+func CheckOne(host string, port string) {
+	log.Printf("Checking %s:%s", host, port)
+
+	s := Server{host, port}
+	_, err := Check(s)
+
+	if (err != nil) {
+		log.Fatalf("Failed to check %s:%s.", host, port)
+	}
+
+	log.Printf("%s:%s is up!", host, port)
 }
