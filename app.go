@@ -284,7 +284,7 @@ func main() {
 	flag_no_cron := flag.Bool("no-cron", false, "Whether to periodically check servers. Defaults to false.")
 	flag_sync_on_startup := flag.Bool("sync_on_startup", false, "Whether to sync with the community servers list on startup. Defaults to false.")
 	flag_check_on_startup := flag.Bool("check_on_startup", false, "Whether to sync and check servers on startup. Defaults to false.")
-	flag_check_one := flag.String("check", "bar", "hostname:port or ip:port of server to check on start.")
+	flag_check_one := flag.String("check", "", "hostname:port or ip:port of server to check on start.")
 	flag.Parse()
 
 	// Detect check_one and just do the check and quit
@@ -298,8 +298,6 @@ func main() {
 		lib.CheckOne(s[0], s[1])
 		return;
 	}
-
-	return
 
 	// Sentry
 	err := sentry.Init(sentry.ClientOptions{
