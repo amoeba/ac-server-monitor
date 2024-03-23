@@ -82,7 +82,7 @@ func (a App) Start(no_cron bool, sync_on_startup bool, check_on_startup bool) {
 	http.Handle("/about/", lib.LogReq(a.About))
 	http.Handle("/static/", lib.LogReq(lib.StaticHandler("static")))
 	http.Handle("/metrics/", promhttp.Handler())
-	// http.Handle("/statuses/", lib.LogReq(a.Statuses))
+	http.Handle("/statuses/", lib.LogReq(a.Statuses))
 
 	http.Handle("/", lib.LogReq(a.Index))
 
