@@ -23,6 +23,12 @@ type ServerStatusRow struct {
 }
 
 type ServerAPIResponse struct {
+	LastChecked string `json:"last_checked"`
+	Count int `json:"count"`
+	Servers  []ServerAPIResponseServer `json:"servers"`
+}
+
+type ServerAPIResponseServer struct {
 	ID      int                      `json:"-"`
 	GUID    string                   `json:"guid"`
 	Name    string                   `json:"name"`
@@ -52,7 +58,7 @@ type ServerAPIResponseWithUptime struct {
 	Uptime  []UptimeTemplateItem     `json:"uptime"`
 }
 
-func Servers(db *sql.DB) []ServerAPIResponse {
+func Servers(db *sql.DB) ServerAPIResponse {
 	stmt := `
 	SELECT
 		servers.id,
@@ -103,8 +109,9 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 		}
 	}
 
-	var finalResponse []ServerAPIResponse
-	var item ServerAPIResponse
+	var finalResponse ServerAPIResponse
+	var items []ServerAPIResponseServer
+	var item ServerAPIResponseServer
 
 	for i := range statuses {
 		isOnline := BoolOrNull(statuses[i].IsOnline)
@@ -116,7 +123,7 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 			log.Fatal(err)
 		}
 
-		item = ServerAPIResponse{
+		item = ServerAPIResponseServer{
 			ID:     statuses[i].ID,
 			GUID:   statuses[i].GUID,
 			Name:   statuses[i].Name,
@@ -132,8 +139,15 @@ func Servers(db *sql.DB) []ServerAPIResponse {
 			},
 		}
 
-		finalResponse = append(finalResponse, item)
+		items = append(items, item)
 	}
+
+	finalResponse.Servers = items
+	finalResponse.Count = len(items)
+	// This is a bit weird but it works. We assume we always have more than one
+	// server and just use the first server's LastChecked value as the LastChecked
+	// value for the entire list
+	finalResponse.LastChecked = items[0].Status.LastChecked
 
 	return finalResponse
 }
@@ -143,15 +157,15 @@ func ServersWithUptimes(db *sql.DB) []ServerAPIResponseWithUptime {
 
 	var response []ServerAPIResponseWithUptime
 
-	for i := range servers {
+	for i := range servers.Servers {
 		var server ServerAPIResponseWithUptime
 
-		server.ID = servers[i].ID
-		server.GUID = servers[i].GUID
-		server.Name = servers[i].Name
-		server.Active = servers[i].Active
-		server.Address = servers[i].Address
-		server.Status = servers[i].Status
+		server.ID = servers.Servers[i].ID
+		server.GUID = servers.Servers[i].GUID
+		server.Name = servers.Servers[i].Name
+		server.Active = servers.Servers[i].Active
+		server.Address = servers.Servers[i].Address
+		server.Status = servers.Servers[i].Status
 
 		// Add in uptime info
 		rows, err := db.Query(QUERY_UPTIME, server.ID)

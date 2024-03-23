@@ -133,7 +133,7 @@ func (a App) Export(w http.ResponseWriter, r *http.Request) {
 func (a App) ApiServers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var data []api.ServerAPIResponse = api.Servers(a.Database)
+	var data api.ServerAPIResponse = api.Servers(a.Database)
 
 	output, err := json.MarshalIndent(data, "", "  ")
 
