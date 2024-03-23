@@ -75,14 +75,14 @@ func (a App) Start(no_cron bool, sync_on_startup bool, check_on_startup bool) {
 	http.Handle("/favicon.ico", http.NotFoundHandler())
 	http.Handle("/api/servers/", lib.LogReq(a.ApiServers))
 	http.Handle("/api/uptime/", lib.LogReq(a.ApiUptimes))
-	http.Handle("/api/logs/", lib.LogReq(a.ApiLogs))
+	// http.Handle("/api/logs/", lib.LogReq(a.ApiLogs))
 	http.Handle("/api/statuses/", lib.LogReq(a.ApiStatuses))
 	http.Handle("/api/", lib.LogReq(a.Api))
-	http.Handle("/export/", lib.LogReq(a.Export))
+	// http.Handle("/export/", lib.LogReq(a.Export))
 	http.Handle("/about/", lib.LogReq(a.About))
 	http.Handle("/static/", lib.LogReq(lib.StaticHandler("static")))
 	http.Handle("/metrics/", promhttp.Handler())
-	http.Handle("/statuses/", lib.LogReq(a.Statuses))
+	// http.Handle("/statuses/", lib.LogReq(a.Statuses))
 
 	http.Handle("/", lib.LogReq(a.Index))
 
@@ -102,7 +102,7 @@ func (a App) Api(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Routes []string `json:"routes"`
 	}{
-		Routes: []string{"/api/servers", "/api/uptime/:id", "/api/statuses/:id", "/api/logs"},
+		Routes: []string{"/api/servers", "/api/uptime/:id", "/api/statuses/:id"},
 	}
 
 	output, err := json.MarshalIndent(data, "", "  ")
