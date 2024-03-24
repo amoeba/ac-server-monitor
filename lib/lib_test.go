@@ -101,6 +101,6 @@ func TestLastSeen(t *testing.T) {
 
 	// Verify API response result
 	response := api.Servers(db)
-	assert.Equal(t, response[0].Status.LastSeen, api.PrettyTimeOrNullString(sql.NullInt64{now, true}))
-	assert.Equal(t, response[1].Status.LastSeen, api.PrettyTimeOrNullString(sql.NullInt64{future, true}))
+	assert.Equal(t, response.Servers[0].Status.LastSeen, api.PrettyTimeOrNullString(sql.NullInt64{now, true}))
+	assert.Equal(t, response.Servers[1].Status.LastSeen, api.PrettyTimeOrNullString(sql.NullInt64{future, true}))
 }
