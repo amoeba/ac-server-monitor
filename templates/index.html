@@ -19,7 +19,7 @@
           ⁉️
         {{ end }}
       </td>
-      <td class="server-name"><a href="/statuses/{{ $row.ID }}">{{ $row.Name }}</a></td>
+      <td class="server-name"><a href="/statuses/{{ $row.Name }}">{{ $row.Name }}</a></td>
       <td class="server-bars">
         <div class="bars">
           {{ range $uptime := $row.Uptime }}

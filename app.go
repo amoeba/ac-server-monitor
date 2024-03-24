@@ -13,7 +13,6 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 
@@ -74,7 +73,7 @@ func (a App) Start(no_cron bool, sync_on_startup bool, check_on_startup bool) {
 	// web
 	http.Handle("/favicon.ico", http.NotFoundHandler())
 	http.Handle("/api/servers/", lib.LogReq(a.ApiServers))
-	http.Handle("/api/uptime/", lib.LogReq(a.ApiUptimes))
+	http.Handle("/api/uptimes/", lib.LogReq(a.ApiUptimes))
 	// http.Handle("/api/logs/", lib.LogReq(a.ApiLogs))
 	http.Handle("/api/statuses/", lib.LogReq(a.ApiStatuses))
 	http.Handle("/api/", lib.LogReq(a.Api))
@@ -102,7 +101,7 @@ func (a App) Api(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Routes []string `json:"routes"`
 	}{
-		Routes: []string{"/api/servers", "/api/uptime/:id", "/api/statuses/:id"},
+		Routes: []string{"/api/servers", "/api/uptimes/:name", "/api/statuses/:name"},
 	}
 
 	output, err := json.MarshalIndent(data, "", "  ")
@@ -159,7 +158,7 @@ func (a App) ApiUptimes(w http.ResponseWriter, r *http.Request) {
 
 	// Pull out server id from URL
 	// TODO: Put into subroutine
-	re := regexp.MustCompile(`\/api\/uptime\/(\d+)`)
+	re := regexp.MustCompile(`\/api\/uptimes\/(.+)`)
 	m := re.FindStringSubmatch(r.URL.Path)
 
 	if len(m) != 2 {
@@ -170,17 +169,22 @@ func (a App) ApiUptimes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	server_id, err := strconv.Atoi(m[1])
+	// Find ID for server by name
+	server_id, err := api.GetServerIdByName(a.Database, m[1]);
 
-	if err != nil {
-		log.Printf("Failed to convert %s to an int. Returning HTTP 500.", m[1])
-
+	if (err != nil) {
+		log.Printf("Failed to parse server id from query result.")
 		w.WriteHeader(500)
-
 		return
 	}
 
-	var data []api.UptimeApiItem = api.Uptime(a.Database, server_id)
+	if server_id == 0 {
+		log.Printf("Failed to find server_id for server with name %s. Returning HTTP 404.", m[1])
+		w.WriteHeader(404)
+		return
+	}
+
+	var data api.UptimeResult = api.Uptime(a.Database, server_id, m[1])
 
 	output, err := json.MarshalIndent(data, "", "  ")
 
@@ -218,7 +222,7 @@ func (a App) ApiLogs(w http.ResponseWriter, r *http.Request) {
 func (a App) ApiStatuses(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	re := regexp.MustCompile(`\/api\/statuses\/(\d+)`)
+	re := regexp.MustCompile(`\/api\/statuses\/(.+)`)
 	m := re.FindStringSubmatch(r.URL.Path)
 
 	if len(m) != 2 {
@@ -229,13 +233,18 @@ func (a App) ApiStatuses(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	server_id, err := strconv.Atoi(m[1])
+	// Find ID for server by name
+	server_id, err := api.GetServerIdByName(a.Database, m[1]);
 
-	if err != nil {
-		log.Printf("Failed to convert %s to an int. Returning HTTP 500.", m[1])
-
+	if (err != nil) {
+		log.Printf("Failed to parse server id from query result.")
 		w.WriteHeader(500)
+		return
+	}
 
+	if server_id == 0 {
+		log.Printf("Failed to find server_id for server with name %s. Returning HTTP 404.", m[1])
+		w.WriteHeader(404)
 		return
 	}
 
@@ -257,7 +266,7 @@ func (a App) ApiStatuses(w http.ResponseWriter, r *http.Request) {
 
 func (a App) Statuses(w http.ResponseWriter, r *http.Request) {
 	// Pull out server id from URL
-	re := regexp.MustCompile(`\/statuses\/(\d+)`)
+	re := regexp.MustCompile(`\/statuses\/(.+)`)
 	m := re.FindStringSubmatch(r.URL.Path)
 
 	if len(m) != 2 {
@@ -267,13 +276,18 @@ func (a App) Statuses(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	server_id, err := strconv.Atoi(m[1])
+	// Find ID for server by name
+	server_id, err := api.GetServerIdByName(a.Database, m[1]);
 
-	if err != nil {
-		log.Printf("Failed to convert %s to an int. Returning HTTP 500.", m[1])
-
+	if (err != nil) {
+		log.Printf("Failed to parse server id from query result.")
 		w.WriteHeader(500)
+		return
+	}
 
+	if server_id == 0 {
+		log.Printf("Failed to find server_id for server with name %s. Returning HTTP 404.", m[1])
+		w.WriteHeader(404)
 		return
 	}
 

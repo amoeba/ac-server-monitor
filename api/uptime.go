@@ -21,6 +21,12 @@ type RTT struct {
 	Mean int `json:"mean"`
 }
 
+type UptimeResult struct {
+	Server string `json:"server"`
+	Count int `json:"count"`
+	Uptimes []UptimeApiItem `json:"uptimes"`
+}
+
 type UptimeApiItem struct {
 	Date   string  `json:"date"`
 	Uptime float64 `json:"uptime"`
@@ -81,7 +87,7 @@ func GetUptimeClass(uptime float64) string {
 
 // TODO: Handle the param properly
 // TODO: Handle not found
-func Uptime(db *sql.DB, server_id int) []UptimeApiItem {
+func Uptime(db *sql.DB, server_id int, name string) UptimeResult {
 	rows, err := db.Query(QUERY_UPTIME, server_id)
 
 	if err != nil {
@@ -90,6 +96,7 @@ func Uptime(db *sql.DB, server_id int) []UptimeApiItem {
 
 	defer rows.Close()
 
+	var result UptimeResult
 	var uptimes []UptimeApiItem
 
 	for rows.Next() {
@@ -120,5 +127,9 @@ func Uptime(db *sql.DB, server_id int) []UptimeApiItem {
 		}
 	}
 
-	return uptimes
+	result.Server = name
+	result.Count = len(uptimes)
+	result.Uptimes = uptimes
+
+	return result
 }

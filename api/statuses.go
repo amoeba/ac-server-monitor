@@ -13,6 +13,13 @@ WHERE id = ?
 LIMIT 1
 `
 
+var QUERY_SERVER_ID_BY_NAME = `
+SELECT id
+FROM servers
+WHERE name = ?
+LIMIT 1
+`
+
 var QUERY_STATUSES = `
 SELECT status, created_at, rtt, message
 FROM statuses
@@ -23,6 +30,7 @@ LIMIT 20;
 
 type StatusApiResponse struct {
 	ServerName string                `json:"server"`
+	Count      int                   `json:"count"`
 	Statuses   []StatusApiStatusItem `json:"statuses"`
 }
 
@@ -60,6 +68,28 @@ func GetServerNameById(db *sql.DB, id int) (string, error) {
 	}
 
 	return name, nil
+}
+
+func GetServerIdByName(db *sql.DB, name string) (int, error) {
+	result, err := db.Query(QUERY_SERVER_ID_BY_NAME, name)
+
+	if err != nil {
+		return 0, err
+	}
+
+	defer result.Close()
+
+	var id int
+
+	for result.Next() {
+		scanErr := result.Scan(&id)
+
+		if scanErr != nil {
+			return 0, scanErr
+		}
+	}
+
+	return id, nil
 }
 
 func Statuses(db *sql.DB, server_id int) StatusApiResponse {
@@ -123,6 +153,7 @@ func Statuses(db *sql.DB, server_id int) StatusApiResponse {
 		}
 	}
 
+	response.Count = len(statuses)
 	response.Statuses = statuses
 
 	return response
