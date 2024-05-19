@@ -59,8 +59,12 @@ func FakeLoginPacket() []byte {
 //
 // It returns true or false depending on whether the number of bytes matches
 // the expected value.
-func CheckResponseLength(nbytes int) bool {
-	return nbytes == 52 || nbytes == 28
+func CheckResponseLength(nbytes int) (bool, error) {
+	if (nbytes == 52 || nbytes == 28) {
+		return true, nil
+	}
+
+	return false, fmt.Errorf("In function CheckResponseLength, number of bytes read was neither 52 or 28 as expected.")
 }
 
 // Check checks whether or not a Server is up
@@ -69,28 +73,41 @@ func CheckResponseLength(nbytes int) bool {
 // return an error if the checking process fails
 func Check(srv Server) (bool, error) {
 	connectionstring := fmt.Sprintf("%s:%s", srv.Host, srv.Port)
-	conn, connerror := net.DialTimeout("udp", connectionstring, timeout*time.Second)
-
-	if connerror != nil {
-		return false, connerror
-	}
-
-	// Send our fake login packet
-	loginpacket := FakeLoginPacket()
-	conn.Write(loginpacket)
-
-	readbuffer := make([]byte, 1024)
-
-	// Timeout if read blocks for too long
-	conn.SetReadDeadline(time.Now().Add(timeout * time.Second))
-
-	nbytes, err := conn.Read(readbuffer)
+	conn, err := net.DialTimeout("udp", connectionstring, timeout*time.Second)
 
 	if err != nil {
 		return false, err
 	}
 
-	return CheckResponseLength(nbytes), nil
+	// Set up read and write deadlines so we mark as down and move on
+	conn.SetReadDeadline(time.Now().Add(timeout * time.Second))
+	conn.SetWriteDeadline(time.Now().Add(timeout * time.Second))
+
+	// Send our fake login packet
+	loginpacket := FakeLoginPacket()
+
+	_, err = conn.Write(loginpacket)
+
+	if err != nil {
+		return false, err
+	}
+
+	readbuffer := make([]byte, 1024)
+
+	var nbytes int
+	nbytes, err = conn.Read(readbuffer)
+
+	if err != nil {
+		return false, err
+	}
+
+	_, err = CheckResponseLength(nbytes)
+
+	if err != nil {
+		return false, fmt.Errorf("Check of read response length failed, got: %X", readbuffer)
+	}
+
+	return true, nil
 }
 
 func CheckOne(host string, port string) {
