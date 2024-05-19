@@ -64,7 +64,7 @@ func CheckResponseLength(nbytes int) (bool, error) {
 		return true, nil
 	}
 
-	return false, fmt.Errorf("In function CheckResponseLength, number of bytes read was neither 52 or 28 as expected.")
+	return false, fmt.Errorf("n function CheckResponseLength, number of bytes read was %d instead of 52 or 28 as expected.", nbytes)
 }
 
 // Check checks whether or not a Server is up
@@ -104,7 +104,7 @@ func Check(srv Server) (bool, error) {
 	_, err = CheckResponseLength(nbytes)
 
 	if err != nil {
-		return false, fmt.Errorf("Check of read response length failed, got: %X", readbuffer)
+		return false, err
 	}
 
 	return true, nil
