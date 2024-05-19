@@ -18,7 +18,7 @@ import (
 // replicated the approach. This code is essentially a 1:1 clone of the
 // ThwargLauncher implementation.
 
-const timeout = 30
+const timeout = 5
 
 // iotoba converts a uint8[] to a byte[]
 func iatoba(input []uint8) []byte {
