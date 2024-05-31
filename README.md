@@ -17,4 +17,3 @@ Feel free to build stuff with it:
 - [`/api`](https://servers.treestats.net/api): List of API routes
 - [`/api/servers/`](https://servers.treestats.net/api/servers): List of all servers and their statuses
 - [`/api/uptime/:id`](https://servers.treestats.net/uptime/1): Recent uptime information for a single server
-- [`/api/logs`](https://servers.treestats.net/logs): Recent logs from the application itself. This is mostly for debugging

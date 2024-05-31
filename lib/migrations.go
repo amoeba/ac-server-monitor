@@ -64,6 +64,16 @@ func CreateLogsTable(db *sql.DB) (sql.Result, error) {
 	return db.Exec(createTableStatement)
 }
 
+func DropLogsTable(db *sql.DB) (sql.Result, error) {
+	log.Println("DropLogsTable")
+
+	createTableStatement := `
+	DROP TABLE  logs;
+	`
+
+	return db.Exec(createTableStatement)
+}
+
 func AlterStatusesAddRTTAndMessage(db *sql.DB) (sql.Result, error) {
 	log.Println("AlterStatusesAddRTTAndMessage")
 
@@ -168,6 +178,11 @@ func AutoMigrate(db *sql.DB) error {
 	_, err = AlterServersAddLastSeen(db)
 	_, err = AlterServersAddIsOnline(db)
 
+	_, err = DropLogsTable(db)
+
+	if err != nil {
+		return err
+	}
 
 	log.Println("...AutoMigration Done")
 

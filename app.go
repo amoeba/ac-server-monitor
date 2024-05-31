@@ -74,7 +74,6 @@ func (a App) Start(no_cron bool, sync_on_startup bool, check_on_startup bool) {
 	http.Handle("/favicon.ico", http.NotFoundHandler())
 	http.Handle("/api/servers/", lib.LogReq(a.ApiServers))
 	http.Handle("/api/uptimes/", lib.LogReq(a.ApiUptimes))
-	// http.Handle("/api/logs/", lib.LogReq(a.ApiLogs))
 	http.Handle("/api/statuses/", lib.LogReq(a.ApiStatuses))
 	http.Handle("/api/", lib.LogReq(a.Api))
 	// http.Handle("/export/", lib.LogReq(a.Export))
@@ -185,25 +184,6 @@ func (a App) ApiUptimes(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var data api.UptimeResult = api.Uptime(a.Database, server_id, m[1])
-
-	output, err := json.MarshalIndent(data, "", "  ")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Length")
-
-	w.Write(output)
-}
-
-func (a App) ApiLogs(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	var data []api.LogApiItem = api.Logs(a.Database)
 
 	output, err := json.MarshalIndent(data, "", "  ")
 
