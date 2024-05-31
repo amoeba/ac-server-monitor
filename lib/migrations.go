@@ -139,6 +139,36 @@ func AlterServersAddIsOnline(db *sql.DB) (sql.Result, error) {
 	return db.Exec(createIndexStatement)
 }
 
+func UpdateStatusesFixDownWithNullMessage(db *sql.DB) (sql.Result, error) {
+	// Fixes data issue partially addressed by
+	// https://github.com/amoeba/ac-server-monitor/pull/14 and
+	// commit 7601422fc7fbd157f0f0b0194f55bf9db6cbbb7b.
+	log.Println("UpdateStatusesFixDownWithNullMessage")
+
+	statement := `
+		UPDATE statuses
+		SET status = 1
+		WHERE status = 0 AND message IS NULL
+	`
+
+	return db.Exec(statement)
+}
+
+func UpdateStatusesFixResponseSizeFourtyFour(db *sql.DB) (sql.Result, error) {
+	// Fixes data issue partially addressed by
+	// https://github.com/amoeba/ac-server-monitor/pull/14 and
+	// commit 7601422fc7fbd157f0f0b0194f55bf9db6cbbb7b.
+	log.Println("UpdateStatusesFixResponseSizeFourtyFour")
+
+	statement := `
+		UPDATE statuses
+		SET status = 1
+		WHERE status = 0 AND message LIKE '%bytes read was 44%';
+	`
+
+	return db.Exec(statement)
+}
+
 func AutoMigrate(db *sql.DB) error {
 	log.Println("AutoMigrating...")
 
@@ -179,6 +209,18 @@ func AutoMigrate(db *sql.DB) error {
 	_, err = AlterServersAddIsOnline(db)
 
 	_, err = DropLogsTable(db)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = UpdateStatusesFixDownWithNullMessage(db)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = UpdateStatusesFixResponseSizeFourtyFour(db)
 
 	if err != nil {
 		return err
