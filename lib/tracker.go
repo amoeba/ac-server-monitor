@@ -210,7 +210,6 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 		up = false
 		message := fmt.Sprintf("Check for server %s failed with error message `%s`.", s.Name, err)
 		log.Print(message)
-		WriteLog(db, message)
 	} else {
 		log.Printf("Check for server %s succeeded in %d ms", s.Name, rtt)
 	}

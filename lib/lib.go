@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"database/sql"
 	"fmt"
 	"html/template"
 	"log"
@@ -24,24 +23,6 @@ func LogReq(f func(w http.ResponseWriter, r *http.Request)) http.Handler {
 
 		f(w, r)
 	})
-}
-
-func WriteLog(db *sql.DB, message string) {
-	log.Println(fmt.Sprintf("WriteLog called with message %s", message))
-
-	queryString := `
-		INSERT INTO logs ( message, created_at )
-		VALUES (?, ?);`
-
-	_, err := db.Exec(
-		queryString,
-		message,
-		time.Now().UTC().Unix(),
-	)
-
-	if err != nil {
-		log.Fatal(err)
-	}
 }
 
 func RenderTemplate(w http.ResponseWriter, name string, data interface{}) {
