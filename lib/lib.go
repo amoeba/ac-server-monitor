@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"golang.org/x/text/message"
 )
 
 func Env(key, defaultValue string) string {
@@ -76,4 +78,9 @@ func RelativeTime(ts int64) string {
 	} else {
 		return fmt.Sprintf("%d weeks ago", (diff+180000)/(60*60*24*7))
 	}
+}
+
+func CommafyNumber(number int64) string {
+	p := message.NewPrinter(message.MatchLanguage("en"))
+	return p.Sprintf("%d", number)
 }

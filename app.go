@@ -285,13 +285,16 @@ func (a App) Statuses(w http.ResponseWriter, r *http.Request) {
 func (a App) Index(w http.ResponseWriter, r *http.Request) {
 	var servers []api.ServerAPIResponseWithUptime = api.ServersWithUptimes(a.Database)
 	var last_updated = lib.QueryLastUpdated(a.Database)
+	var count = lib.CommafyNumber(lib.QueryTotalNumStatuses(a.Database))
 
 	data := struct {
 		Servers     []api.ServerAPIResponseWithUptime
 		LastUpdated string
+		TotalStatusCount string
 	}{
 		Servers:     servers,
 		LastUpdated: last_updated,
+		TotalStatusCount: count,
 	}
 
 	lib.RenderTemplate(w, "index.html", data)

@@ -27,3 +27,25 @@ func QueryLastUpdated(db *sql.DB) string {
 
 	return RelativeTime(int64(updated_at))
 }
+
+func QueryTotalNumStatuses(db *sql.DB) int64 {
+	query := `
+	SELECT MAX(ROWID) as count
+	FROM statuses
+	LIMIT 1
+	`
+
+	res, err := db.Query(query)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var count int64
+
+	for res.Next() {
+		res.Scan(&count)
+	}
+
+	return count
+}
