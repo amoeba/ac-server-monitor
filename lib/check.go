@@ -18,7 +18,7 @@ import (
 // replicated the approach. This code is essentially a 1:1 clone of the
 // ThwargLauncher implementation.
 
-const timeout = 5
+const timeout = 2
 
 // iotoba converts a uint8[] to a byte[]
 func iatoba(input []uint8) []byte {
@@ -60,11 +60,32 @@ func FakeLoginPacket() []byte {
 // It returns true or false depending on whether the number of bytes matches
 // the expected value.
 func CheckResponseLength(nbytes int) (bool, error) {
-	if (nbytes == 52 || nbytes == 44 || nbytes == 28) {
+	if nbytes == 52 || nbytes == 44 || nbytes == 28 {
 		return true, nil
 	}
 
 	return false, fmt.Errorf("n function CheckResponseLength, number of bytes read was %d instead of 52, 44 or 28 as expected.", nbytes)
+}
+
+func CheckWithRetry(srv Server, maxRetries int, delay time.Duration) (bool, error) {
+	for attempt := 1; attempt <= maxRetries; attempt++ {
+		start := time.Now()
+
+		isUp, err := Check(srv)
+		if err == nil && isUp {
+			return true, nil
+		}
+		if attempt < maxRetries {
+			stop := time.Now()
+			elapsed := stop.Sub(start)
+
+			if elapsed < delay {
+				time.Sleep(delay - elapsed)
+			}
+		}
+
+	}
+	return false, fmt.Errorf("server %s:%s is down after %d attempts", srv.Host, srv.Port, maxRetries)
 }
 
 // Check checks whether or not a Server is up
@@ -116,7 +137,7 @@ func CheckOne(host string, port string) {
 	s := Server{host, port}
 	_, err := Check(s)
 
-	if (err != nil) {
+	if err != nil {
 		log.Fatalf("Failed to check %s:%s.", host, port)
 	}
 
