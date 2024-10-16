@@ -203,7 +203,7 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 	}
 
 	rtt_start := time.Now().UTC().UnixMilli()
-	up, err := Check(server)
+	up, err := CheckWithRetry(server, 20, 2*time.Second)
 	rtt := time.Now().UTC().UnixMilli() - rtt_start
 
 	if err != nil {
