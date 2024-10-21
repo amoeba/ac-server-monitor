@@ -104,3 +104,18 @@ func TestLastSeen(t *testing.T) {
 	assert.Equal(t, response.Servers[0].Status.LastSeen, api.PrettyTimeOrNullString(sql.NullInt64{now, true}))
 	assert.Equal(t, response.Servers[1].Status.LastSeen, api.PrettyTimeOrNullString(sql.NullInt64{future, true}))
 }
+
+func TestBufferToPrettyString(t *testing.T) {
+
+	ex1 := []byte{0}
+	ex1Pretty := BufferToPrettyString(ex1)
+	assert.Equal(t, "0x00", ex1Pretty)
+
+	ex2 := []byte{0, 1, 2}
+	ex2Pretty := BufferToPrettyString(ex2)
+	assert.Equal(t, "0x00 0x01 0x02", ex2Pretty)
+
+	ex3 := []byte{255, 128, 0}
+	ex3Pretty := BufferToPrettyString(ex3)
+	assert.Equal(t, "0xFF 0x80 0x00", ex3Pretty)
+}

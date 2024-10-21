@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"golang.org/x/text/message"
@@ -83,4 +84,19 @@ func RelativeTime(ts int64) string {
 func CommafyNumber(number int64) string {
 	p := message.NewPrinter(message.MatchLanguage("en"))
 	return p.Sprintf("%d", number)
+}
+
+func BufferToPrettyString(buf []byte) string {
+	var builder strings.Builder
+
+	for i, b := range buf {
+		builder.WriteString(fmt.Sprintf("0x%02X", b))
+
+		// Print space unless we're at the last position
+		if i+1 < len(buf) {
+			builder.WriteString(" ")
+		}
+	}
+
+	return builder.String()
 }
