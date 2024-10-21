@@ -88,13 +88,16 @@ func CommafyNumber(number int64) string {
 
 func BufferToPrettyString(buf []byte) string {
 	var builder strings.Builder
+	// We know how much space we need ahead of time
+	// `0x00 ` for each byte, -1 since no trailer
+	builder.Grow(len(buf)*4 - 1)
 
 	for i, b := range buf {
 		builder.WriteString(fmt.Sprintf("0x%02X", b))
 
 		// Print space unless we're at the last position
 		if i+1 < len(buf) {
-			builder.WriteString(" ")
+			builder.WriteByte(' ')
 		}
 	}
 
