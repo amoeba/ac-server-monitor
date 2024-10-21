@@ -60,7 +60,7 @@ func FakeLoginPacket() []byte {
 // It returns true or false depending on whether the number of bytes matches
 // the expected value.
 func CheckResponseLength(nbytes int) (bool, error) {
-	if (nbytes == 52 || nbytes == 44 || nbytes == 28) {
+	if nbytes == 52 || nbytes == 44 || nbytes == 28 {
 		return true, nil
 	}
 
@@ -118,7 +118,7 @@ func CheckOne(host string, port string) {
 	s := Server{host, port}
 	_, err := Check(s)
 
-	if (err != nil) {
+	if err != nil {
 		log.Fatalf("Failed to check %s:%s.", host, port)
 	}
 
