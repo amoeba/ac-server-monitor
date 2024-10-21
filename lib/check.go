@@ -104,9 +104,8 @@ func Check(srv Server) (bool, error) {
 	_, err = CheckResponseLength(nbytes)
 
 	if err != nil {
-		// For now we'd like to print the entire buffer (except the trailing zeroes) when we fail
-		log.Printf("Raw read buffer: %s", BufferToPrettyString(readbuffer[0:nbytes]))
-		return false, err
+		// For now, wrap the error we get from CheckResponseLength so we can include the raw message
+		return false, fmt.Errorf("%w; Raw buffer was: %s", err, BufferToPrettyString(readbuffer[0:nbytes]))
 	}
 
 	return true, nil
