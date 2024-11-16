@@ -67,15 +67,24 @@ func CheckResponseLength(nbytes int) (bool, error) {
 	return false, fmt.Errorf("n function CheckResponseLength, number of bytes read was %d instead of 52, 44 or 28 as expected.", nbytes)
 }
 
-func CheckWithRetry(srv Server, maxRetries int, delay time.Duration) (bool, error) {
-	for attempt := 1; attempt <= maxRetries; attempt++ {
+func CheckWithRetry(srv Server, maxRetries int, delay time.Duration) (bool, int, error) {
+	var attempt int
+	var lasterr error
+
+	for attempt = 1; attempt <= maxRetries; attempt++ {
 		start := time.Now()
 
 		isUp, err := Check(srv)
+
+		// if it's up, we're done
 		if err == nil && isUp {
-			return true, nil
+			return true, attempt, nil
 		}
-		if attempt < maxRetries {
+
+		lasterr = err
+
+		// if it's down, sleep and continue to try again
+		if attempt <= maxRetries {
 			stop := time.Now()
 			elapsed := stop.Sub(start)
 
@@ -83,9 +92,9 @@ func CheckWithRetry(srv Server, maxRetries int, delay time.Duration) (bool, erro
 				time.Sleep(delay - elapsed)
 			}
 		}
-
 	}
-	return false, fmt.Errorf("server %s:%s is down after %d attempts", srv.Host, srv.Port, maxRetries)
+
+	return false, attempt - 1, fmt.Errorf("server %s:%s is down with error %w", srv.Host, srv.Port, lasterr)
 }
 
 // Check checks whether or not a Server is up
