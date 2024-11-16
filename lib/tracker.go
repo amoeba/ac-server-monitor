@@ -203,15 +203,15 @@ func UpdateStatusForServer(db *sql.DB, s *ServerListItem) error {
 	}
 
 	rtt_start := time.Now().UTC().UnixMilli()
-	up, err := CheckWithRetry(server, 20, 2*time.Second)
+	up, nattempts, err := CheckWithRetry(server, 20, 2*time.Second)
 	rtt := time.Now().UTC().UnixMilli() - rtt_start
 
 	if err != nil {
 		up = false
-		message := fmt.Sprintf("Check for server %s failed with error message `%s`.", s.Name, err)
+		message := fmt.Sprintf("Check for server %s failed after %d attempt(s) with error message `%s` .", s.Name, nattempts, err)
 		log.Print(message)
 	} else {
-		log.Printf("Check for server %s succeeded in %d ms", s.Name, rtt)
+		log.Printf("Check for server %s succeeded in %d ms after %d attempt(s)", s.Name, rtt, nattempts)
 	}
 
 	// Add new row to statuses table
