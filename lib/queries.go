@@ -54,6 +54,7 @@ func QueryTotalNumServers(db *sql.DB) int64 {
 	query := `
 	SELECT count(1) as count
 	FROM servers
+	WHERE is_listed = 1
 	LIMIT 1
 	`
 
