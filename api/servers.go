@@ -144,10 +144,13 @@ func Servers(db *sql.DB) ServerAPIResponse {
 
 	finalResponse.Servers = items
 	finalResponse.Count = len(items)
-	// This is a bit weird but it works. We assume we always have more than one
-	// server and just use the first server's LastChecked value as the LastChecked
-	// value for the entire list
-	finalResponse.LastChecked = items[0].Status.LastChecked
+	
+	// Set LastChecked if we have servers
+	if len(items) > 0 {
+		finalResponse.LastChecked = items[0].Status.LastChecked
+	} else {
+		finalResponse.LastChecked = time.Now().UTC().Format(time.RFC3339)
+	}
 
 	return finalResponse
 }
