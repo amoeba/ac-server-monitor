@@ -156,3 +156,7 @@ table.servers td {
 .box-title {
   font-size: 75%;
 }
+
+.box-content {
+  word-break: break-word;
+}
