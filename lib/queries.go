@@ -49,3 +49,25 @@ func QueryTotalNumStatuses(db *sql.DB) int64 {
 
 	return count
 }
+
+func QueryTotalNumServers(db *sql.DB) int64 {
+	query := `
+	SELECT count(1) as count
+	FROM servers
+	LIMIT 1
+	`
+
+	res, err := db.Query(query)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var count int64
+
+	for res.Next() {
+		res.Scan(&count)
+	}
+
+	return count
+}

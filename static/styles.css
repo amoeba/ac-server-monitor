@@ -1,20 +1,36 @@
 /* General styles */
 body {
+  align-items: start;
+  display: flex;
+  flex-direction: column;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-size: 16px;
+  gap: 1em;
   margin: 0;
   padding: 1em;
 }
 
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+header .title {
+  display: flex;
+  gap: 0.5em;
+}
+
 header h1 {
+  font-size: 100%;
   margin: 0;
   padding: 0;
 }
 
 header nav {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  align-items: start;
 }
 
 header nav ul {
@@ -25,22 +41,27 @@ header nav ul {
   gap: 1em;
 }
 
-header nav a {
+header a {
   text-decoration: none;
 }
 
-header nav li:first-child a:visited {
+
+header a:visited {
   color: blue;
 }
 
-header nav ul:last-child {
-  justify-content: flex-end;
+
+header nav a:hover {
+  text-decoration: underline;
 }
 
-header a:hover,
-footer a:hover {
-  text-decoration: none;
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  align-items: start;
 }
+
 
 table {
   border-collapse: collapse;
@@ -116,4 +137,22 @@ table.servers td {
 /* Utility Styles */
 .breadcrumb a:visited {
   color: blue;
+}
+
+/* boxes */
+.boxes {
+  display: grid;
+  grid-template-columns: 8em 8em;
+  gap: 1em;
+}
+
+.box {
+  border-top: 2px solid blue;
+  background-color: rgba(0, 0, 200, 0.25);
+  padding: 0.5em;
+  max-width: 8em;
+}
+
+.box-title {
+  font-size: 75%;
 }

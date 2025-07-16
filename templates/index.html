@@ -1,12 +1,40 @@
 {{ template "_header.html" }}
 <main>
-  <p class="last-updated">🕥 Last updated {{ .LastUpdated }}</p>
-  <p class="source-info">
-    ℹ️ Servers sourced from <a href="https://github.com/acresources/serverslist">acresources/serverslist</a>
-  </p>
-  <p class="total-status-count">
-    📡 {{.TotalStatusCount}} checks sent
-  </p>
+  <div class="boxes">
+    <div class="box">
+      <div class="box-title">
+        Servers Tracked
+      </div>
+      <div class="box-content">
+        {{.TotalServersCount}}
+      </div>
+    </div>
+        <div class="box">
+      <div class="box-title">
+        Checks Sent
+      </div>
+      <div class="box-content">
+        {{.TotalStatusCount}}
+      </div>
+    </div>
+        <div class="box">
+      <div class="box-title">
+        Last Updated
+      </div>
+      <div class="box-content">
+        {{ .LastUpdated }}
+    </div>
+    </div>
+        <div class="box">
+      <div class="box-title">
+        Source
+      </div>
+      <div class="box-content">
+        <a href="https://github.com/acresources/serverslist">acresources/serverlist</a>
+      </div>
+    </div>
+  </div>
+
   <table class="servers">
     <tbody>
     {{ range $row := .Servers }}

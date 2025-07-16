@@ -169,9 +169,9 @@ func (a App) ApiUptimes(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Find ID for server by name
-	server_id, err := api.GetServerIdByName(a.Database, m[1]);
+	server_id, err := api.GetServerIdByName(a.Database, m[1])
 
-	if (err != nil) {
+	if err != nil {
 		log.Printf("Failed to parse server id from query result.")
 		w.WriteHeader(500)
 		return
@@ -214,9 +214,9 @@ func (a App) ApiStatuses(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Find ID for server by name
-	server_id, err := api.GetServerIdByName(a.Database, m[1]);
+	server_id, err := api.GetServerIdByName(a.Database, m[1])
 
-	if (err != nil) {
+	if err != nil {
 		log.Printf("Failed to parse server id from query result.")
 		w.WriteHeader(500)
 		return
@@ -257,9 +257,9 @@ func (a App) Statuses(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Find ID for server by name
-	server_id, err := api.GetServerIdByName(a.Database, m[1]);
+	server_id, err := api.GetServerIdByName(a.Database, m[1])
 
-	if (err != nil) {
+	if err != nil {
 		log.Printf("Failed to parse server id from query result.")
 		w.WriteHeader(500)
 		return
@@ -285,21 +285,23 @@ func (a App) Statuses(w http.ResponseWriter, r *http.Request) {
 func (a App) Index(w http.ResponseWriter, r *http.Request) {
 	var servers []api.ServerAPIResponseWithUptime = api.ServersWithUptimes(a.Database)
 	var last_updated = lib.QueryLastUpdated(a.Database)
-	var count = lib.CommafyNumber(lib.QueryTotalNumStatuses(a.Database))
+	var total_statuses = lib.CommafyNumber(lib.QueryTotalNumStatuses(a.Database))
+	var total_servers = lib.CommafyNumber(lib.QueryTotalNumServers(a.Database))
 
 	data := struct {
-		Servers     []api.ServerAPIResponseWithUptime
-		LastUpdated string
-		TotalStatusCount string
+		Servers           []api.ServerAPIResponseWithUptime
+		LastUpdated       string
+		TotalStatusCount  string
+		TotalServersCount string
 	}{
-		Servers:     servers,
-		LastUpdated: last_updated,
-		TotalStatusCount: count,
+		Servers:           servers,
+		LastUpdated:       last_updated,
+		TotalStatusCount:  total_statuses,
+		TotalServersCount: total_servers,
 	}
 
 	lib.RenderTemplate(w, "index.html", data)
 }
-
 
 func main() {
 	// Command line flags
@@ -310,15 +312,15 @@ func main() {
 	flag.Parse()
 
 	// Detect check_one and just do the check and quit
-	if (len(*flag_check_one) > 0) {
+	if len(*flag_check_one) > 0 {
 		s := strings.Split(*flag_check_one, ":")
 
-		if (len(s) != 2) {
+		if len(s) != 2 {
 			log.Panicf("Couldn't parse %s. Check your formatting.", *flag_check_one)
 		}
 
 		lib.CheckOne(s[0], s[1])
-		return;
+		return
 	}
 
 	// Sentry

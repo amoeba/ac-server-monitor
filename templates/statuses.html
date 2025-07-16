@@ -1,35 +1,37 @@
 {{ template "_header.html" }}
 
 <main>
-  <p class="breadcrumb">
+  <div class="breadcrumb">
     <a href="/">Back</a>
-  </p>
+  </div>
 
-  <h2>{{ .Statuses.ServerName }}</h2>
+  <div>
+    <h2>{{ .Statuses.ServerName }}</h2>
 
-  <h3>Latest Check Results</h3>
-  {{ if not .Statuses.Statuses }}
-  No statuses to show.
-  {{ else }}
-  <table class="checks">
-    <thead>
+    <h3>Latest Check Results</h3>
+    {{ if not .Statuses.Statuses }}
+    No statuses to show.
+    {{ else }}
+    <table class="checks">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Checked At</th>
+          <th>RTT</th>
+          <th>Message</th>
+        </tr>
+      </thead>
+      {{ range $row := .Statuses.Statuses }}
       <tr>
-        <th>Status</th>
-        <th>Checked At</th>
-        <th>RTT</th>
-        <th>Message</th>
+        <td>{{ $row.Status }}</td>
+        <td>{{ $row.CreatedAt }}</td>
+        <td>{{ $row.RTT }}</td>
+        <td>{{ $row.Message }}</td>
       </tr>
-    </thead>
-    {{ range $row := .Statuses.Statuses }}
-    <tr>
-      <td>{{ $row.Status }}</td>
-      <td>{{ $row.CreatedAt }}</td>
-      <td>{{ $row.RTT }}</td>
-      <td>{{ $row.Message }}</td>
-    </tr>
-    {{ end }}
+      {{ end }}
 
-  </table>
-  {{ end }}
+    </table>
+    {{ end }}
+  </div>
 </main>
 {{ template "_footer.html" }}
