@@ -169,6 +169,16 @@ func UpdateStatusesFixResponseSizeFourtyFour(db *sql.DB) (sql.Result, error) {
 	return db.Exec(statement)
 }
 
+func CreateStatusesServerIdCreatedAtIndex(db *sql.DB) (sql.Result, error) {
+	log.Println("CreateStatusesServerIdCreatedAtIndex")
+
+	createIndexStatement := `
+	CREATE INDEX IF NOT EXISTS statuses_server_id_created_at ON statuses (server_id, created_at DESC);
+	`
+
+	return db.Exec(createIndexStatement)
+}
+
 func AutoMigrate(db *sql.DB) error {
 	log.Println("AutoMigrating...")
 
@@ -221,6 +231,12 @@ func AutoMigrate(db *sql.DB) error {
 	}
 
 	_, err = UpdateStatusesFixResponseSizeFourtyFour(db)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = CreateStatusesServerIdCreatedAtIndex(db)
 
 	if err != nil {
 		return err
