@@ -69,11 +69,11 @@ func TestTwoPartServerNames(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		name := GenerateTwoPartServerName()
 		assert.Contains(t, name, " ", "Server name should contain a space for two-part format")
-		
+
 		// Check that both parts are capitalized
 		parts := strings.Split(name, " ")
 		assert.Len(t, parts, 2, "Server name should have exactly two parts")
-		
+
 		// First letter of each part should be uppercase
 		assert.True(t, unicode.IsUpper(rune(parts[0][0])), "First part should be capitalized")
 		assert.True(t, unicode.IsUpper(rune(parts[1][0])), "Second part should be capitalized")
