@@ -9,6 +9,37 @@ View it live at <https://servers.treestats.net>.
 Every ten minutes, we fetch the [community server list](https://github.com/acresources/serverslist) and check whether server is up or down by sending a login packet.
 The result is stored and the application shows current and historical status for each server.
 
+## Development Setup
+
+### Building
+
+To build the application and the database seeding tool:
+
+```bash
+make
+```
+
+This will create two executables:
+
+- `monitor` - The main web application
+- `seed` - Database seeding tool for development. Run this to generate fake data.
+
+### Running
+
+First seed the database:
+
+```sh
+./seed
+```
+
+Then run the monitor:
+
+```bash
+./monitor --no-cron
+```
+
+The `--no-cron` flag prevents the application from trying to fetch real server data.
+
 ## API
 
 There's a pretty basic API.
