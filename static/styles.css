@@ -5,58 +5,52 @@ html {
 }
 
 body {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  font-family: Tahoma, "MS Sans Serif", Arial, sans-serif;
-  font-size: 11px;
-  gap: 0;
+  font-family: "MS Sans Serif", sans-serif;
+  font-size: 8pt;
   margin: 0;
   padding: 0;
-  background: linear-gradient(to bottom, #3A6EA5 0%, #004E98 100%);
+  background: #C0C0C0;
   min-height: 100vh;
   width: 100%;
 }
 
 .container {
   width: 1000px;
-  max-width: 1000px;
-  display: flex;
-  flex-direction: column;
+  margin: 0 auto;
+  background: #C0C0C0;
   min-height: 100vh;
+  border-left: 2px outset #C0C0C0;
+  border-right: 2px inset #C0C0C0;
 }
 
 header {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  background: linear-gradient(to bottom, #2C5AA0 0%, #1A4480 50%, #1A4480 50%, #0F2C5A 100%);
-  border-bottom: 1px solid #000;
-  padding: 4px 8px;
-  box-shadow: inset 0 1px 0 #4A7BC8, 0 1px 3px rgba(0,0,0,0.5);
+  background: #C0C0C0;
+  border: 2px outset #C0C0C0;
+  padding: 2px;
+  margin: 2px;
 }
 
 header .title {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+  background: #0080C0;
   color: white;
+  padding: 1px 4px;
   font-weight: bold;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.8);
+  font-size: 8pt;
+  border: 1px inset #C0C0C0;
+  margin-bottom: 2px;
 }
 
 header h1 {
-  font-size: 11px;
+  font-size: 8pt;
   margin: 0;
-  padding: 2px 0;
+  padding: 0;
   color: white;
   font-weight: bold;
 }
 
 header nav {
-  display: flex;
-  align-items: start;
-  margin-top: 4px;
+  background: #C0C0C0;
+  padding: 2px;
 }
 
 header nav ul {
@@ -64,31 +58,28 @@ header nav ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  gap: 2px;
+  gap: 1px;
 }
 
 header nav li {
-  background: linear-gradient(to bottom, #E1ECFE 0%, #C7D8F0 50%, #A6C1E8 100%);
-  border: 1px solid #5C93D0;
-  border-radius: 3px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.3);
+  background: #C0C0C0;
+  border: 1px outset #C0C0C0;
 }
 
 header nav li:hover {
-  background: linear-gradient(to bottom, #F0F5FF 0%, #D2E1F0 50%, #B8CCE8 100%);
+  background: #DCDCDC;
 }
 
 header nav li:active {
-  background: linear-gradient(to bottom, #B8CCE8 0%, #D2E1F0 50%, #F0F5FF 100%);
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.3), 0 1px 0 rgba(255,255,255,0.8);
+  border: 1px inset #C0C0C0;
 }
 
 header a {
   text-decoration: none;
   color: white;
-  padding: 4px 12px;
+  padding: 1px 4px;
   display: block;
-  font-size: 11px;
+  font-size: 8pt;
 }
 
 header .title a {
@@ -101,77 +92,64 @@ header .title a:visited {
 }
 
 header nav a {
-  color: #000;
+  color: #000000;
+  padding: 2px 8px;
 }
 
 header nav a:visited {
-  color: #000;
+  color: #000000;
 }
 
 header nav a:hover {
-  color: #000;
+  color: #000000;
 }
 
 main {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: start;
-  background: #ECE9D8;
-  border: 2px outset #ECE9D8;
-  margin: 8px;
-  padding: 12px;
-  border-radius: 0;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-  flex: 1;
-  min-height: 400px;
+  background: #C0C0C0;
+  border: 2px inset #C0C0C0;
+  margin: 2px;
+  padding: 8px;
 }
 
 .server-status-section h2 {
-  font-size: 12px;
+  font-size: 8pt;
   font-weight: bold;
-  color: #000080;
-  margin: 8px 0 8px 0;
-  padding: 4px;
-  background: linear-gradient(to bottom, #F0F0F0 0%, #D4D0C8 100%);
-  border: 1px outset #D4D0C8;
+  color: #000000;
+  margin: 4px 0;
+  padding: 2px;
+  background: #C0C0C0;
+  border: 1px outset #C0C0C0;
   text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
 
 table {
   border-collapse: collapse;
   background: white;
-  border: 1px inset #D4D0C8;
+  border: 2px inset #C0C0C0;
+  font-size: 8pt;
 }
 
 /* Servers List */
 table.servers {
   width: 100%;
   background: white;
-  border: 2px inset #D4D0C8;
-  font-size: 11px;
-  box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-}
-
-table.servers thead {
-  background: linear-gradient(to bottom, #F0F0F0 0%, #D4D0C8 100%);
+  border: 2px inset #C0C0C0;
+  font-size: 8pt;
 }
 
 table.servers th {
-  padding: 6px 8px;
-  border-right: 1px solid #C0C0C0;
-  border-bottom: 1px solid #C0C0C0;
+  padding: 2px 4px;
+  border: 1px outset #C0C0C0;
   font-weight: bold;
-  color: #000;
+  color: #000000;
   text-align: left;
-  background: linear-gradient(to bottom, #F0F0F0 0%, #D4D0C8 100%);
+  background: #C0C0C0;
 }
 
 table.servers a {
   text-decoration: none;
-  color: #000080;
+  color: #0000FF;
   font-weight: normal;
 }
 
@@ -184,36 +162,30 @@ table.servers a:hover {
 }
 
 table.servers td {
-  line-height: 1.4;
-  padding: 6px 8px;
-  border-bottom: 1px solid #E0E0E0;
-  border-right: 1px solid #F0F0F0;
+  padding: 2px 4px;
+  border: 1px inset #C0C0C0;
+  background: white;
 }
 
 table.servers tr:nth-child(even) {
-  background: #F8F8F8;
-}
-
-table.servers tr:hover {
-  background: #E0E8FF;
+  background: #F0F0F0;
 }
 
 table.servers .server-status {
   text-align: center;
-  width: 50px;
-  background: #F0F0F0;
-  border-right: 1px solid #D4D0C8;
+  width: 40px;
+  background: #DCDCDC;
 }
 
 table.servers .server-name {
   font-weight: bold;
   background: white;
-  min-width: 200px;
+  min-width: 150px;
 }
 
 table.servers .server-bars {
   background: white;
-  min-width: 300px;
+  min-width: 200px;
 }
 
 /* Bars */
@@ -221,15 +193,15 @@ table.servers .server-bars {
   display: flex;
   justify-content: flex-end;
   gap: 1px;
-  height: 14px;
+  height: 10px;
   background: white;
-  border: 1px inset #D4D0C8;
-  padding: 2px;
+  border: 1px inset #C0C0C0;
+  padding: 1px;
 }
 
 .bar-container {
   height: 100%;
-  width: 4px;
+  width: 3px;
   display: flex;
   align-items: flex-end;
 }
@@ -238,44 +210,33 @@ table.servers .server-bars {
   display: block;
   font-style: normal;
   width: 100%;
-  border: 1px outset;
+  border: 1px outset #C0C0C0;
 }
 
 .bar.high {
-  background: #00C000;
-  border-color: #00A000;
+  background: #00FF00;
 }
 
 .bar.mid {
   background: #FFFF00;
-  border-color: #E0E000;
 }
 
 .bar.low {
   background: #FF0000;
-  border-color: #C00000;
 }
 
 /* Uptime Checks Table */
 .checks th,
 .checks td {
-  padding: 4px 8px;
-  font-size: 11px;
+  padding: 2px 4px;
+  font-size: 8pt;
 }
 
 .checks th {
-  background: linear-gradient(to bottom, #F0F0F0 0%, #D4D0C8 100%);
-  border: 1px outset #D4D0C8;
+  background: #C0C0C0;
+  border: 1px outset #C0C0C0;
   font-weight: bold;
-  color: #000;
-}
-
-.checks th:first-child {
-  border-radius: 0;
-}
-
-.checks th:last-child {
-  border-radius: 0;
+  color: #000000;
 }
 
 /* Utility Styles */
@@ -285,41 +246,42 @@ table.servers .server-bars {
 
 /* boxes */
 .boxes {
-  display: grid;
-  grid-template-columns: 230px 230px;
-  gap: 12px;
-  margin-bottom: 16px;
+  display: table;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 2px;
+  margin-bottom: 8px;
 }
 
 .box {
-  background: linear-gradient(to bottom, #F0F0F0 0%, #D4D0C8 100%);
-  border: 2px outset #D4D0C8;
-  padding: 10px;
-  font-size: 11px;
-  box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-  min-height: 40px;
+  display: table-cell;
+  width: 25%;
+  background: #DCDCDC;
+  border: 2px outset #C0C0C0;
+  padding: 4px;
+  font-size: 8pt;
+  vertical-align: top;
 }
 
 .box-title {
-  font-size: 11px;
+  font-size: 8pt;
   font-weight: bold;
-  color: #000080;
-  margin-bottom: 6px;
-  text-transform: none;
-  border-bottom: 1px solid #C0C0C0;
-  padding-bottom: 2px;
+  color: #000000;
+  margin-bottom: 2px;
+  border-bottom: 1px solid #808080;
+  padding-bottom: 1px;
 }
 
 .box-content {
   word-break: break-word;
   font-weight: bold;
-  color: #000;
-  font-size: 13px;
-  padding-top: 4px;
+  color: #000000;
+  font-size: 8pt;
+  padding-top: 2px;
 }
 
 .box-content a {
-  color: #000080;
+  color: #0000FF;
   text-decoration: none;
 }
 
@@ -333,15 +295,13 @@ table.servers .server-bars {
 
 /* Footer */
 footer {
-  background: linear-gradient(to bottom, #D4D0C8 0%, #C0C0C0 100%);
-  border-top: 1px solid #808080;
-  border-bottom: 1px solid #404040;
-  padding: 6px 8px;
-  margin: 0 8px 8px 8px;
-  font-size: 10px;
-  color: #000;
+  background: #C0C0C0;
+  border: 1px outset #C0C0C0;
+  padding: 2px;
+  margin: 2px;
+  font-size: 8pt;
+  color: #000000;
   text-align: center;
-  box-shadow: inset 0 1px 0 #F0F0F0;
 }
 
 footer p {
@@ -349,9 +309,9 @@ footer p {
 }
 
 footer a {
-  color: #000080;
+  color: #0000FF;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 footer a:visited {
