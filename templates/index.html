@@ -35,35 +35,38 @@
     </div>
   </div>
 
-  <table class="servers">
-    <tbody>
-    {{ range $row := .Servers }}
-    <tr>
-      <td class="server-status">
-        {{ if $row.Status.IsOnline.Valid }}
-          {{ if $row.Status.IsOnline.Bool }}
-            ✅
+  <div class="server-status-section">
+    <h2>Server Status</h2>
+    <table class="servers">
+      <tbody>
+      {{ range $row := .Servers }}
+      <tr>
+        <td class="server-status">
+          {{ if $row.Status.IsOnline.Valid }}
+            {{ if $row.Status.IsOnline.Bool }}
+              ✅
+            {{ else }}
+              ❌
+            {{ end }}
           {{ else }}
-            ❌
+            ⁉️
           {{ end }}
-        {{ else }}
-          ⁉️
-        {{ end }}
-      </td>
-      <td class="server-name"><a href="/statuses/{{ $row.Name }}">{{ $row.Name }}</a></td>
-      <td class="server-bars">
-        <div class="bars">
-          {{ range $uptime := $row.Uptime }}
-            <div class="bar-container"
-            data-tippy-content="<div><strong>{{ $uptime.Date }}</strong></div><div>Uptime: {{ $uptime.UptimeFmt }}%</div><div>Mean: {{ $uptime.RTTMean }} ms</div><div>Range: {{$uptime.RTTMin}}-{{$uptime.RTTMax}} ms</div><div>N: {{ $uptime.N }}</div>">
-              <i class="bar {{ $uptime.UptimeClass }}" style="height: {{ $uptime.Uptime }}%;"></i>
-            </div>
-          {{ end }}
-          </div>
         </td>
-      </tr>
-    {{ end }}
-    </tbody>
-  </table>
+        <td class="server-name"><a href="/statuses/{{ $row.Name }}">{{ $row.Name }}</a></td>
+        <td class="server-bars">
+          <div class="bars">
+            {{ range $uptime := $row.Uptime }}
+              <div class="bar-container"
+              data-tippy-content="<div><strong>{{ $uptime.Date }}</strong></div><div>Uptime: {{ $uptime.UptimeFmt }}%</div><div>Mean: {{ $uptime.RTTMean }} ms</div><div>Range: {{$uptime.RTTMin}}-{{$uptime.RTTMax}} ms</div><div>N: {{ $uptime.N }}</div>">
+                <i class="bar {{ $uptime.UptimeClass }}" style="height: {{ $uptime.Uptime }}%;"></i>
+              </div>
+            {{ end }}
+            </div>
+          </td>
+        </tr>
+      {{ end }}
+      </tbody>
+    </table>
+  </div>
 </main>
 {{ template "_footer.html" }}

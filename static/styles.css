@@ -1,36 +1,62 @@
 /* General styles */
+html {
+  width: 100%;
+  min-width: 1024px;
+}
+
 body {
-  align-items: start;
+  align-items: center;
   display: flex;
   flex-direction: column;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  font-size: 16px;
-  gap: 1em;
+  font-family: Tahoma, "MS Sans Serif", Arial, sans-serif;
+  font-size: 11px;
+  gap: 0;
   margin: 0;
-  padding: 1em;
+  padding: 0;
+  background: linear-gradient(to bottom, #3A6EA5 0%, #004E98 100%);
+  min-height: 100vh;
+  width: 100%;
+}
+
+.container {
+  width: 1000px;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 header {
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
+  gap: 0;
+  background: linear-gradient(to bottom, #2C5AA0 0%, #1A4480 50%, #1A4480 50%, #0F2C5A 100%);
+  border-bottom: 1px solid #000;
+  padding: 4px 8px;
+  box-shadow: inset 0 1px 0 #4A7BC8, 0 1px 3px rgba(0,0,0,0.5);
 }
 
 header .title {
   display: flex;
-  gap: 0.5em;
+  gap: 8px;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.8);
 }
 
 header h1 {
-  font-size: 100%;
+  font-size: 11px;
   margin: 0;
-  padding: 0;
+  padding: 2px 0;
+  color: white;
+  font-weight: bold;
 }
 
 header nav {
   display: flex;
   align-items: start;
+  margin-top: 4px;
 }
 
 header nav ul {
@@ -38,59 +64,142 @@ header nav ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  gap: 1em;
+  gap: 2px;
+}
+
+header nav li {
+  background: linear-gradient(to bottom, #E1ECFE 0%, #C7D8F0 50%, #A6C1E8 100%);
+  border: 1px solid #5C93D0;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.3);
+}
+
+header nav li:hover {
+  background: linear-gradient(to bottom, #F0F5FF 0%, #D2E1F0 50%, #B8CCE8 100%);
+}
+
+header nav li:active {
+  background: linear-gradient(to bottom, #B8CCE8 0%, #D2E1F0 50%, #F0F5FF 100%);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.3), 0 1px 0 rgba(255,255,255,0.8);
 }
 
 header a {
   text-decoration: none;
+  color: white;
+  padding: 4px 12px;
+  display: block;
+  font-size: 11px;
 }
 
-
-header a:visited {
-  color: blue;
+header .title a {
+  color: white;
+  padding: 0;
 }
 
+header .title a:visited {
+  color: white;
+}
+
+header nav a {
+  color: #000;
+}
+
+header nav a:visited {
+  color: #000;
+}
 
 header nav a:hover {
-  text-decoration: underline;
+  color: #000;
 }
 
 main {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 12px;
   align-items: start;
+  background: #ECE9D8;
+  border: 2px outset #ECE9D8;
+  margin: 8px;
+  padding: 12px;
+  border-radius: 0;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+  flex: 1;
+  min-height: 400px;
+}
+
+.server-status-section h2 {
+  font-size: 12px;
+  font-weight: bold;
+  color: #000080;
+  margin: 8px 0 8px 0;
+  padding: 4px;
+  background: linear-gradient(to bottom, #F0F0F0 0%, #D4D0C8 100%);
+  border: 1px outset #D4D0C8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 
 table {
   border-collapse: collapse;
+  background: white;
+  border: 1px inset #D4D0C8;
 }
 
 /* Servers List */
+table.servers {
+  width: 100%;
+  background: white;
+  border: 2px inset #D4D0C8;
+  font-size: 11px;
+}
+
 table.servers a {
   text-decoration: none;
+  color: #000080;
+  font-weight: normal;
 }
 
 table.servers a:visited {
-  color: blue;
+  color: #800080;
+}
+
+table.servers a:hover {
+  text-decoration: underline;
 }
 
 table.servers td {
-  line-height: 1.5em;
+  line-height: 1.4;
+  padding: 4px 8px;
+  border-bottom: 1px solid #D4D0C8;
+}
+
+table.servers .server-status {
+  text-align: center;
+  width: 30px;
+  background: #F0F0F0;
+  border-right: 1px solid #D4D0C8;
+}
+
+table.servers .server-name {
+  font-weight: bold;
+  background: white;
 }
 
 /* Bars */
 .bars {
   display: flex;
   justify-content: flex-end;
-  gap: 0.1em;
-  height: 1em;
+  gap: 1px;
+  height: 14px;
+  background: white;
+  border: 1px inset #D4D0C8;
+  padding: 2px;
 }
 
 .bar-container {
   height: 100%;
-  width: 0.5em;
+  width: 4px;
   display: flex;
   align-items: flex-end;
 }
@@ -99,64 +208,119 @@ table.servers td {
   display: block;
   font-style: normal;
   width: 100%;
+  border: 1px outset;
 }
 
 .bar.high {
-  border-top: 1px solid rgba(9, 83, 42, 0.5);
-  background-color: rgba(18, 168, 85, 0.5);
+  background: #00C000;
+  border-color: #00A000;
 }
 
 .bar.mid {
-  border-top: 1px solid rgba(87, 60, 9, 0.5);
-  background-color: rgba(168, 116, 18, 0.5);
+  background: #FFFF00;
+  border-color: #E0E000;
 }
 
 .bar.low {
-  border-top: 1px solid rgba(160, 20, 20, 0.5);
-  background-color: rgba(216, 25, 25, 0.5);
+  background: #FF0000;
+  border-color: #C00000;
 }
 
 /* Uptime Checks Table */
 .checks th,
 .checks td {
-  padding: 0.25em 0.5em;
+  padding: 4px 8px;
+  font-size: 11px;
 }
 
 .checks th {
-  background-color: #eee;
+  background: linear-gradient(to bottom, #F0F0F0 0%, #D4D0C8 100%);
+  border: 1px outset #D4D0C8;
+  font-weight: bold;
+  color: #000;
 }
 
 .checks th:first-child {
-  border-radius: 3px 0 0 0;
+  border-radius: 0;
 }
 
 .checks th:last-child {
-  border-radius: 0 3px 0 0;
+  border-radius: 0;
 }
 
 /* Utility Styles */
 .breadcrumb a:visited {
-  color: blue;
+  color: #800080;
 }
 
 /* boxes */
 .boxes {
   display: grid;
-  grid-template-columns: 8em 8em;
-  gap: 1em;
+  grid-template-columns: 230px 230px;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .box {
-  border-top: 2px solid blue;
-  background-color: rgba(0, 0, 200, 0.25);
-  padding: 0.5em;
-  max-width: 8em;
+  background: linear-gradient(to bottom, #F0F0F0 0%, #D4D0C8 100%);
+  border: 2px outset #D4D0C8;
+  padding: 10px;
+  font-size: 11px;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  min-height: 40px;
 }
 
 .box-title {
-  font-size: 75%;
+  font-size: 11px;
+  font-weight: bold;
+  color: #000080;
+  margin-bottom: 6px;
+  text-transform: none;
+  border-bottom: 1px solid #C0C0C0;
+  padding-bottom: 2px;
 }
 
 .box-content {
   word-break: break-word;
+  font-weight: bold;
+  color: #000;
+  font-size: 13px;
+  padding-top: 4px;
+}
+
+.box-content a {
+  color: #000080;
+  text-decoration: none;
+}
+
+.box-content a:visited {
+  color: #800080;
+}
+
+.box-content a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  background: #D4D0C8;
+  border-top: 1px solid #808080;
+  padding: 8px;
+  margin: 0 8px 8px 8px;
+  font-size: 10px;
+  color: #000;
+  text-align: center;
+}
+
+footer a {
+  color: #000080;
+  text-decoration: none;
+}
+
+footer a:visited {
+  color: #800080;
+}
+
+footer a:hover {
+  text-decoration: underline;
 }
