@@ -20,28 +20,19 @@ make
 ```
 
 This will create two executables:
+
 - `monitor` - The main web application
-- `seed` - Database seeding tool for development
+- `seed` - Database seeding tool for development. Run this to generate fake data.
 
-### Database Seeding
+### Running
 
-For development and testing, you can populate the database with fake data:
+First seed the database:
 
-```bash
+```sh
 ./seed
 ```
 
-This will:
-- Create the database automatically 
-- Run all migrations defined in AutoMigrate
-- Generate 10 servers with realistic two-part names
-- Create 2 weeks of fake uptime data for each server
-
-The seeded data includes servers with names like "Phoenix Fortress", "Crystal Tower", etc., and realistic uptime patterns with occasional downtime.
-
-### Running the Application
-
-After seeding the database, you can start the web application:
+Then run the monitor:
 
 ```bash
 ./monitor --no-cron
