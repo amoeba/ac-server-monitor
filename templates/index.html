@@ -38,6 +38,13 @@
   <div class="server-status-section">
     <h2>Server Status</h2>
     <table class="servers">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Server Name</th>
+          <th>Uptime History</th>
+        </tr>
+      </thead>
       <tbody>
       {{ range $row := .Servers }}
       <tr>
