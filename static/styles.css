@@ -1,3 +1,9 @@
+:root {
+    --shared-grid-template-columns: 10em 10em;
+    --shared-grid-column-gap: 1em;
+    --shared-grid-row-gap: 1em;
+}
+
 /* General styles */
 body {
     align-items: start;
@@ -67,16 +73,25 @@ table {
 }
 
 /* Servers List */
-table.servers a {
+.servers {
+    display: grid;
+    grid-template-columns: var(--shared-grid-template-columns);
+    grid-column-gap: var(--shared-grid-column-gap);
+    grid-row-gap: 0.5em;
+}
+
+.servers a {
     text-decoration: none;
 }
 
-table.servers a:visited {
+.servers a:visited {
     color: blue;
 }
 
-table.servers td {
-    line-height: 1.5em;
+.server-status-and-name {
+    display: flex;
+    gap: 0.25em;
+    font-size: 90%;
 }
 
 /* Bars */
@@ -141,9 +156,9 @@ table.servers td {
 /* boxes */
 .boxes {
     display: grid;
-    grid-template-columns: 10em 10em;
-    column-gap: 1em;
-    row-gap: 1em;
+    grid-template-columns: var(--shared-grid-template-columns);
+    column-gap: var(--shared-grid-column-gap);
+    row-gap: var(--shared-grid-row-gap);
 }
 
 .box {
