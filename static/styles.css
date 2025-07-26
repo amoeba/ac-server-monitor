@@ -1,162 +1,164 @@
 /* General styles */
 body {
-  align-items: start;
-  display: flex;
-  flex-direction: column;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  font-size: 16px;
-  gap: 1em;
-  margin: 0;
-  padding: 1em;
+    align-items: start;
+    display: flex;
+    flex-direction: column;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+        Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    font-size: 16px;
+    gap: 1em;
+    margin: 0;
+    padding: 1em;
 }
 
 header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
 }
 
 header .title {
-  display: flex;
-  gap: 0.5em;
+    display: flex;
+    gap: 0.5em;
 }
 
 header h1 {
-  font-size: 100%;
-  margin: 0;
-  padding: 0;
+    font-size: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 header nav {
-  display: flex;
-  align-items: start;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
 }
 
 header nav ul {
-  display: flex;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  gap: 1em;
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    gap: 1em;
 }
 
 header a {
-  text-decoration: none;
+    text-decoration: none;
 }
-
 
 header a:visited {
-  color: blue;
+    color: blue;
 }
 
-
 header nav a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 main {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  align-items: start;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    align-items: start;
 }
 
-
 table {
-  border-collapse: collapse;
+    border-collapse: collapse;
 }
 
 /* Servers List */
 table.servers a {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 table.servers a:visited {
-  color: blue;
+    color: blue;
 }
 
 table.servers td {
-  line-height: 1.5em;
+    line-height: 1.5em;
 }
 
 /* Bars */
 .bars {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.1em;
-  height: 1em;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.1em;
+    height: 1em;
 }
 
 .bar-container {
-  height: 100%;
-  width: 0.5em;
-  display: flex;
-  align-items: flex-end;
+    height: 100%;
+    width: 0.5em;
+    display: flex;
+    align-items: flex-end;
 }
 
 .bar {
-  display: block;
-  font-style: normal;
-  width: 100%;
+    display: block;
+    font-style: normal;
+    width: 100%;
 }
 
 .bar.high {
-  border-top: 1px solid rgba(9, 83, 42, 0.5);
-  background-color: rgba(18, 168, 85, 0.5);
+    border-top: 1px solid rgba(9, 83, 42, 0.5);
+    background-color: rgba(18, 168, 85, 0.5);
 }
 
 .bar.mid {
-  border-top: 1px solid rgba(87, 60, 9, 0.5);
-  background-color: rgba(168, 116, 18, 0.5);
+    border-top: 1px solid rgba(87, 60, 9, 0.5);
+    background-color: rgba(168, 116, 18, 0.5);
 }
 
 .bar.low {
-  border-top: 1px solid rgba(160, 20, 20, 0.5);
-  background-color: rgba(216, 25, 25, 0.5);
+    border-top: 1px solid rgba(160, 20, 20, 0.5);
+    background-color: rgba(216, 25, 25, 0.5);
 }
 
 /* Uptime Checks Table */
 .checks th,
 .checks td {
-  padding: 0.25em 0.5em;
+    padding: 0.25em 0.5em;
 }
 
 .checks th {
-  background-color: #eee;
+    background-color: #eee;
 }
 
 .checks th:first-child {
-  border-radius: 3px 0 0 0;
+    border-radius: 3px 0 0 0;
 }
 
 .checks th:last-child {
-  border-radius: 0 3px 0 0;
+    border-radius: 0 3px 0 0;
 }
 
 /* Utility Styles */
 .breadcrumb a:visited {
-  color: blue;
+    color: blue;
 }
 
 /* boxes */
 .boxes {
-  display: grid;
-  grid-template-columns: 8em 8em;
-  gap: 1em;
+    display: grid;
+    grid-template-columns: 10em 10em;
+    column-gap: 1em;
+    row-gap: 1em;
 }
 
 .box {
-  border-top: 2px solid blue;
-  background-color: rgba(0, 0, 200, 0.25);
-  padding: 0.5em;
-  max-width: 8em;
+    border-top: 2px solid blue;
+    background-color: rgba(0, 0, 200, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+    padding: 0.5em;
 }
 
 .box-title {
-  font-size: 75%;
+    font-size: 75%;
 }
 
 .box-content {
-  word-break: break-word;
+    word-break: break-word;
 }
