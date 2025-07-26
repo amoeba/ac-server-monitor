@@ -25,15 +25,59 @@
 
     <div class="servers">
         {{ range $row := .Servers }}
-        <div class="server-status-and-name">
-            <div class="server-status">
-                {{ if $row.Status.IsOnline.Valid }} {{ if
-                $row.Status.IsOnline.Bool }} ✅ {{ else }} ❌ {{ end }} {{ else
-                }} ⁉️ {{ end }}
-            </div>
-            <div class="server-name">
-                <a href="/statuses/{{ $row.Name }}">{{ $row.Name }}</a>
-            </div>
+        <div class="server-status">
+            {{ if $row.Status.IsOnline.Valid }} {{ if $row.Status.IsOnline.Bool
+            }}
+            <svg
+                role="img"
+                aria-labelledby="up"
+                width="16"
+                height="16"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <rect
+                    x="0"
+                    y="0"
+                    width="16"
+                    height="16"
+                    fill="rgba(0, 200 , 0, 1)"
+                />
+            </svg>
+            {{ else }}
+            <svg
+                role="img"
+                aria-labelledby="down"
+                width="16"
+                height="16"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <rect
+                    x="0"
+                    y="0"
+                    width="16"
+                    height="16"
+                    fill="rgba(220, 0, 0, 1)"
+                />
+            </svg>
+            {{ end }} {{ else }}<svg
+                role="img"
+                aria-labelledby="unknown"
+                width="16"
+                height="16"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <rect
+                    x="0"
+                    y="0"
+                    width="16"
+                    height="16"
+                    fill="rgba(200, 200, 0, 1)"
+                />
+            </svg>
+            {{ end }}
+        </div>
+        <div class="server-name">
+            <a href="/statuses/{{ $row.Name }}">{{ $row.Name }}</a>
         </div>
         <div class="server-bars">
             <div class="bars">

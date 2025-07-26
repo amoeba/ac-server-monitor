@@ -75,8 +75,8 @@ table {
 /* Servers List */
 .servers {
     display: grid;
-    grid-template-columns: var(--shared-grid-template-columns);
-    grid-column-gap: var(--shared-grid-column-gap);
+    grid-template-columns: 16px 1fr 1fr;
+    grid-column-gap: 0.5em;
     grid-row-gap: 0.5em;
 }
 
