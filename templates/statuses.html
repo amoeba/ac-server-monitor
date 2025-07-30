@@ -46,7 +46,42 @@
       </thead>
       {{ range $row := .Statuses.Statuses }}
       <tr>
-        <td>{{ $row.Status }}</td>
+        <td>
+          {{ if eq $row.Status "UP" }}
+            <svg
+                role="img"
+                aria-labelledby="up"
+                width="16"
+                height="16"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <rect
+                    x="0"
+                    y="0"
+                    width="16"
+                    height="16"
+                    fill="rgba(0, 200 , 0, 1)"
+                />
+            </svg>
+            {{ else }}
+            <svg
+                role="img"
+                aria-labelledby="down"
+                width="16"
+                height="16"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <rect
+                    x="0"
+                    y="0"
+                    width="16"
+                    height="16"
+                    fill="rgba(220, 0, 0, 1)"
+                />
+            </svg>
+            {{ end }}
+            {{ $row.Status }}
+        </td>
         <td>{{ $row.CreatedAt }}</td>
         <td>{{ $row.RTT }}</td>
         <td>{{ $row.Message }}</td>

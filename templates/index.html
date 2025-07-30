@@ -26,40 +26,42 @@
     <div class="servers">
         {{ range $row := .Servers }}
         <div class="server-status">
-            {{ if $row.Status.IsOnline.Valid }} {{ if $row.Status.IsOnline.Bool
-            }}
-            <svg
-                role="img"
-                aria-labelledby="up"
-                width="16"
-                height="16"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <rect
-                    x="0"
-                    y="0"
+            {{ if $row.Status.IsOnline.Valid }}
+                {{ if $row.Status.IsOnline.Bool }}
+                <svg
+                    role="img"
+                    aria-labelledby="up"
                     width="16"
                     height="16"
-                    fill="rgba(0, 200 , 0, 1)"
-                />
-            </svg>
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <rect
+                        x="0"
+                        y="0"
+                        width="16"
+                        height="16"
+                        fill="rgba(0, 200 , 0, 1)"
+                    />
+                </svg>
+                {{ else }}
+                <svg
+                    role="img"
+                    aria-labelledby="down"
+                    width="16"
+                    height="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <rect
+                        x="0"
+                        y="0"
+                        width="16"
+                        height="16"
+                        fill="rgba(220, 0, 0, 1)"
+                    />
+                </svg>
+                {{ end }}
             {{ else }}
             <svg
-                role="img"
-                aria-labelledby="down"
-                width="16"
-                height="16"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <rect
-                    x="0"
-                    y="0"
-                    width="16"
-                    height="16"
-                    fill="rgba(220, 0, 0, 1)"
-                />
-            </svg>
-            {{ end }} {{ else }}<svg
                 role="img"
                 aria-labelledby="unknown"
                 width="16"
