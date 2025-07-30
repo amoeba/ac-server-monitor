@@ -6,7 +6,30 @@
   </div>
 
   <div>
-    <h2>{{ .Statuses.ServerName }}</h2>
+    <h2>{{ .Server.Name }}</h2>
+
+    <table>
+      <tr>
+        <td>Type:</td>
+        <td>{{ .Server.Type }}</td>
+      </tr>
+      <tr>
+        <td>Emulator:</td>
+        <td>{{ .Server.Emulator }}</td>
+      </tr>
+      <tr>
+        <td>Address:</td>
+        <td>{{ .Server.Host }}:{{ .Server.Port }}</td>
+      </tr>
+      <tr>
+        <td>Website:</td>
+        <td><a href="{{ .Server.WebsiteURL }}">{{ .Server.WebsiteURL }}</a></td>
+      </tr>
+      <tr>
+        <td>Discord:</td>
+        <td><a href="{{ .Server.DiscordURL }}">{{ .Server.DiscordURL }}</a></td>
+      </tr>
+    </table>
 
     <h3>Latest Check Results</h3>
     {{ if not .Statuses.Statuses }}

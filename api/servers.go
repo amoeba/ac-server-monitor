@@ -10,6 +10,23 @@ import (
 	"gopkg.in/guregu/null.v4"
 )
 
+type ServerTableRow struct {
+	ID          int
+	GUID        string
+	Name        string
+	Description string
+	Emulator    string
+	Host        string
+	Port        string
+	Type        string
+	Status      string
+	WebsiteURL  string
+	DiscordURL  string
+	IsListed    int
+	CreatedAt   int
+	UpdatedAt   int
+}
+
 type ServerStatusRow struct {
 	ID           int
 	GUID         string
@@ -56,6 +73,64 @@ type ServerAPIResponseWithUptime struct {
 	Address ServerAPIResponseAddress `json:"address"`
 	Status  ServerAPIResponseStatus  `json:"status"`
 	Uptime  []UptimeTemplateItem     `json:"uptime"`
+}
+
+func Server(db *sql.DB, id int) ServerTableRow {
+	var response ServerTableRow
+
+	stmt := `
+	SELECT
+		id,
+		guid,
+		name,
+		description,
+		emu,
+		host,
+		port,
+		type,
+		status,
+		website_url,
+		discord_url,
+		is_listed,
+		created_at,
+		updated_at
+	FROM
+		servers
+	WHERE
+		servers.id = ?
+	LIMIT 1
+	`
+
+	rows, err := db.Query(stmt, id)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&response.ID,
+			&response.GUID,
+			&response.Name,
+			&response.Description,
+			&response.Emulator,
+			&response.Host,
+			&response.Port,
+			&response.Type,
+			&response.Status,
+			&response.WebsiteURL,
+			&response.DiscordURL,
+			&response.IsListed,
+			&response.CreatedAt,
+			&response.UpdatedAt,
+		)
+
+		if err != nil {
+			log.Fatalf("error scanning %v", err)
+		}
+	}
+
+	return response
 }
 
 func Servers(db *sql.DB) ServerAPIResponse {
