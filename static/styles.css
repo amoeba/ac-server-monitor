@@ -75,7 +75,7 @@ table {
 /* Servers List */
 .servers {
     display: grid;
-    grid-template-columns: 16px 1fr 1fr;
+    grid-template-columns: 16px 1fr 8em;
     grid-column-gap: 0.5em;
     grid-row-gap: 0.5em;
     width: 21em;
@@ -96,10 +96,15 @@ table {
 }
 
 /* Bars */
+.uptime-legend {
+    margin-bottom: 4px;
+    text-align: right;
+    grid-column: 3;
+}
+
 .bars {
     display: flex;
-    justify-content: flex-end;
-    gap: 0.1em;
+    justify-content: space-between;
     height: 1em;
 }
 
