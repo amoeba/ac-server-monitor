@@ -97,7 +97,6 @@ table {
 
 /* Bars */
 .uptime-legend {
-    margin-bottom: 4px;
     text-align: right;
     grid-column: 3;
 }
