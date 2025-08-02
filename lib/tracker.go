@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"sync"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -293,14 +294,23 @@ func Update(db *sql.DB) error {
 	// First we sync the list with the servers table
 	UpdateServersTable(db, lst)
 
-	// Then we get statuses for each server in the list
+	// Then we get statuses for each server in the list (in parallel)
+	var wg sync.WaitGroup
+	
 	for i := range lst.Servers {
-		updateStatusError := UpdateStatusForServer(db, &lst.Servers[i])
+		wg.Add(1)
+		
+		go func(server *ServerListItem) {
+			defer wg.Done()
+			updateStatusError := UpdateStatusForServer(db, server)
 
-		if updateStatusError != nil {
-			log.Fatal(updateStatusError)
-		}
+			if updateStatusError != nil {
+				log.Fatal(updateStatusError)
+			}
+		}(&lst.Servers[i])
 	}
+	
+	wg.Wait()
 
 	log.Print("Done with update.")
 
