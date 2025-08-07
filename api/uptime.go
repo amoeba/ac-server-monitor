@@ -76,7 +76,7 @@ var QUERY_UPTIME_3_MONTHS = `
 	(
 	SELECT date('now') AS day, 0 AS level
 		UNION ALL
-	SELECT date('now', '-' || level || ' day') AS day, level + 1 AS level FROM ts WHERE level < 90
+	SELECT date('now', '-' || level || ' day') AS day, level + 1 AS level FROM ts WHERE level < 150
 	)
 	SELECT
 		day,
@@ -198,6 +198,12 @@ func UptimeThreeMonths(db *sql.DB, server_id int, name string) []UptimeTemplateI
 		uptimeTmplItem.RTTMean = SQLFloat64ToIntString(uptime.RTTMean)
 
 		uptimes = append(uptimes, uptimeTmplItem)
+	}
+
+	// Reverse the slice to get chronological order (oldest first)
+	for i := len(uptimes)/2 - 1; i >= 0; i-- {
+		opp := len(uptimes) - 1 - i
+		uptimes[i], uptimes[opp] = uptimes[opp], uptimes[i]
 	}
 
 	return uptimes

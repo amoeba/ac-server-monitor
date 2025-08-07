@@ -238,10 +238,12 @@ table {
 
 
 .uptime-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-rows: repeat(7, 16px);
+    grid-auto-flow: column;
     gap: 2px;
     margin: 1em 0;
+    justify-content: start;
 }
 
 .uptime-square {
