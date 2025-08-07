@@ -2,7 +2,7 @@
     --shared-grid-template-columns: 10em 10em;
     --shared-grid-column-gap: 1em;
     --shared-grid-row-gap: 1em;
-    
+
     /* Uptime colors */
     --uptime-high-bg: rgba(18, 168, 85, 0.8);
     --uptime-high-border: rgba(9, 83, 42, 0.5);
@@ -27,6 +27,29 @@ body {
     padding: 1em;
 }
 
+/* Reset */
+h1,
+h2,
+h3 {
+    margin: 0;
+    padding: 0 0 0.5em 0;
+}
+
+@media (min-width: 420px) {
+    .container {
+        max-width: 420px;
+        align-items: start;
+    }
+
+    /* .boxes {
+        grid-template-columns: var(--shared-grid-template-columns);
+    } */
+
+    /* .servers {
+        width: 21em;
+    } */
+}
+
 header {
     display: flex;
     flex-direction: column;
@@ -45,9 +68,10 @@ header h1 {
 }
 
 header nav {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    justify-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    justify-content: flex-start;
 }
 
 header nav ul {
@@ -81,13 +105,19 @@ table {
     border-collapse: collapse;
 }
 
+/* Utility */
+.vstack {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
 /* Servers List */
 .servers {
     display: grid;
     grid-template-columns: 16px 1fr 8em;
     grid-column-gap: 0.5em;
     grid-row-gap: 0.5em;
-    width: 21em;
 }
 
 .servers a {
@@ -170,7 +200,7 @@ table {
 /* boxes */
 .boxes {
     display: grid;
-    grid-template-columns: var(--shared-grid-template-columns);
+    grid-template-columns: 1fr 1fr;
     column-gap: var(--shared-grid-column-gap);
     row-gap: var(--shared-grid-row-gap);
 }
@@ -241,15 +271,4 @@ table {
     transform: scale(1.2);
     z-index: 1;
     position: relative;
-}
-
-@media (max-width: 480px) {
-    .uptime-grid {
-        gap: 1px;
-    }
-    
-    .status-legend {
-        flex-direction: column;
-        gap: 0.5em;
-    }
 }

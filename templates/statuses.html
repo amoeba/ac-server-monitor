@@ -5,7 +5,8 @@
     <a href="/">Back</a>
   </div>
 
-  <div>
+  <div class="vstack">
+    <div>
     <h2>{{ .Server.Name }}</h2>
 
     <table>
@@ -30,7 +31,8 @@
         <td><a href="{{ .Server.DiscordURL }}">{{ .Server.DiscordURL }}</a></td>
       </tr>
     </table>
-
+  </div>
+    <div>
     <h3>Status Over Time (Last 3 Months)</h3>
     <div class="status-legend">
       <div class="legend-item">
@@ -50,7 +52,7 @@
         <span>No data</span>
       </div>
     </div>
-    
+
     <div class="uptime-grid">
       {{ range $uptime := .ThreeMonthUptime }}
       <div
@@ -60,7 +62,8 @@
       ></div>
       {{ end }}
     </div>
-
+  </div>
+<div>
     <h3>Latest Check Results</h3>
     {{ if not .Statuses.Statuses }}
     No statuses to show.
@@ -121,5 +124,6 @@
     </table>
     {{ end }}
   </div>
+</div>
 </main>
 {{ template "_footer.html" }}
