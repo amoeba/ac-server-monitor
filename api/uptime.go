@@ -71,28 +71,51 @@ var QUERY_UPTIME = `
 `
 
 var QUERY_UPTIME_3_MONTHS = `
-	WITH ts(day, level)
-	AS
-	(
-	SELECT date('now') AS day, 0 AS level
+	WITH RECURSIVE week_grid(week_start, week_num, day_offset, current_day) AS (
+		-- Find the Monday that's roughly 5 months ago
+		SELECT 
+			date('now', '-150 days', 'weekday 1') as week_start,
+			0 as week_num,
+			0 as day_offset,
+			date('now', '-150 days', 'weekday 1') as current_day
+		
 		UNION ALL
-	SELECT date('now', '-' || level || ' day') AS day, level + 1 AS level FROM ts WHERE level < 150
+		
+		-- Generate days until we reach today
+		SELECT 
+			CASE WHEN day_offset = 6 
+				THEN date(week_start, '+7 days')
+				ELSE week_start 
+			END,
+			CASE WHEN day_offset = 6 
+				THEN week_num + 1 
+				ELSE week_num 
+			END,
+			(day_offset + 1) % 7,
+			date(current_day, '+1 day')
+		FROM week_grid 
+		WHERE current_day < date('now')
+	),
+	calendar_days AS (
+		SELECT 
+			current_day as day,
+			week_num,
+			day_offset
+		FROM week_grid
 	)
-	SELECT
+	SELECT 
 		day,
 		COALESCE((sum(status) * 1.0 / COUNT(status)) * 100, 0) AS uptime,
 		COUNT(status) AS n,
 		MIN(rtt) as rtt_min,
-		MAX(rtt) as rtt_max,
+		MAX(rtt) as rtt_max,  
 		AVG(rtt) as rtt_mean
-	FROM ts
-	LEFT JOIN statuses
-	ON
-		date(statuses.created_at, 'unixepoch') = ts.day
-	AND
-		statuses.server_id = ?
-	GROUP BY day
-	ORDER BY day DESC;
+	FROM calendar_days
+	LEFT JOIN statuses ON 
+		date(statuses.created_at, 'unixepoch') = calendar_days.day
+		AND statuses.server_id = ?
+	GROUP BY day, week_num, day_offset
+	ORDER BY week_num, day_offset;
 `
 
 const (
@@ -200,11 +223,7 @@ func UptimeThreeMonths(db *sql.DB, server_id int, name string) []UptimeTemplateI
 		uptimes = append(uptimes, uptimeTmplItem)
 	}
 
-	// Reverse the slice to get chronological order (oldest first)
-	for i := len(uptimes)/2 - 1; i >= 0; i-- {
-		opp := len(uptimes) - 1 - i
-		uptimes[i], uptimes[opp] = uptimes[opp], uptimes[i]
-	}
+	// Data is already in chronological order from the query
 
 	return uptimes
 }
