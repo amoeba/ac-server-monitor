@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"math"
 )
@@ -69,6 +70,31 @@ var QUERY_UPTIME = `
 	GROUP BY day;
 `
 
+var QUERY_UPTIME_3_MONTHS = `
+	WITH ts(day, level)
+	AS
+	(
+	SELECT date('now') AS day, 0 AS level
+		UNION ALL
+	SELECT date('now', '-' || level || ' day') AS day, level + 1 AS level FROM ts WHERE level < 90
+	)
+	SELECT
+		day,
+		COALESCE((sum(status) * 1.0 / COUNT(status)) * 100, 0) AS uptime,
+		COUNT(status) AS n,
+		MIN(rtt) as rtt_min,
+		MAX(rtt) as rtt_max,
+		AVG(rtt) as rtt_mean
+	FROM ts
+	LEFT JOIN statuses
+	ON
+		date(statuses.created_at, 'unixepoch') = ts.day
+	AND
+		statuses.server_id = ?
+	GROUP BY day
+	ORDER BY day DESC;
+`
+
 const (
 	UPTIME_CLASS_HIGH string = "high"
 	UPTIME_CLASS_MID         = "mid"
@@ -132,4 +158,47 @@ func Uptime(db *sql.DB, server_id int, name string) UptimeResult {
 	result.Uptimes = uptimes
 
 	return result
+}
+
+func UptimeThreeMonths(db *sql.DB, server_id int, name string) []UptimeTemplateItem {
+	rows, err := db.Query(QUERY_UPTIME_3_MONTHS, server_id)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer rows.Close()
+
+	var uptimes []UptimeTemplateItem
+
+	for rows.Next() {
+		var uptime UptimeRow
+		var uptimeTmplItem UptimeTemplateItem
+
+		err := rows.Scan(
+			&uptime.Date,
+			&uptime.Uptime,
+			&uptime.N,
+			&uptime.RTTMin,
+			&uptime.RTTMax,
+			&uptime.RTTMean,
+		)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		uptimeTmplItem.Date = uptime.Date
+		uptimeTmplItem.Uptime = uptime.Uptime
+		uptimeTmplItem.UptimeFmt = fmt.Sprintf("%.3g", uptime.Uptime)
+		uptimeTmplItem.UptimeClass = GetUptimeClass(uptime.Uptime)
+		uptimeTmplItem.N = uptime.N
+		uptimeTmplItem.RTTMin = SQLNullInt64ToString(uptime.RTTMin)
+		uptimeTmplItem.RTTMax = SQLNullInt64ToString(uptime.RTTMax)
+		uptimeTmplItem.RTTMean = SQLFloat64ToIntString(uptime.RTTMean)
+
+		uptimes = append(uptimes, uptimeTmplItem)
+	}
+
+	return uptimes
 }

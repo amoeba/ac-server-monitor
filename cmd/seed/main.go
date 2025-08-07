@@ -126,16 +126,16 @@ func InsertServer(db *sql.DB, server map[string]interface{}) (int64, error) {
 	return result.LastInsertId()
 }
 
-// CreateFakeUptimeData generates 2 weeks of fake uptime data for a server
+// CreateFakeUptimeData generates 3 months of fake uptime data for a server
 func CreateFakeUptimeData(db *sql.DB, serverID int64, serverName string) error {
 	log.Printf("Creating fake uptime data for server: %s (ID: %d)", serverName, serverID)
 
-	// Generate data for the last 2 weeks (14 days)
+	// Generate data for the last 3 months (90 days)
 	endTime := time.Now()
-	startTime := endTime.AddDate(0, 0, -14)
+	startTime := endTime.AddDate(0, 0, -90)
 
-	// Check every 10 minutes (similar to the real cron job)
-	interval := 10 * time.Minute
+	// Check every 30 minutes (reduced frequency to manage data size)
+	interval := 30 * time.Minute
 
 	// Server uptime characteristics (some servers are more reliable than others)
 	uptimeReliability := 0.85 + rand.Float64()*0.14 // Between 85% and 99% uptime
@@ -144,6 +144,23 @@ func CreateFakeUptimeData(db *sql.DB, serverID int64, serverName string) error {
 	isCurrentlyUp := true // Start with server being up
 	consecutiveDowns := 0
 
+	// Prepare batch insert
+	tx, err := db.Begin()
+	if err != nil {
+		return fmt.Errorf("failed to begin transaction: %w", err)
+	}
+	defer tx.Rollback()
+
+	stmt, err := tx.Prepare(`
+		INSERT INTO statuses (server_id, created_at, status, rtt, message)
+		VALUES (?, ?, ?, ?, ?)
+	`)
+	if err != nil {
+		return fmt.Errorf("failed to prepare statement: %w", err)
+	}
+	defer stmt.Close()
+
+	recordCount := 0
 	for currentTime.Before(endTime) {
 		var status int
 		var rtt *int
@@ -205,20 +222,22 @@ func CreateFakeUptimeData(db *sql.DB, serverID int64, serverName string) error {
 			}
 		}
 
-		// Insert status record
-		query := `
-			INSERT INTO statuses (server_id, created_at, status, rtt, message)
-			VALUES (?, ?, ?, ?, ?)
-		`
-
-		_, err := db.Exec(query, serverID, currentTime.Unix(), status, rtt, message)
+		// Execute batch insert
+		_, err := stmt.Exec(serverID, currentTime.Unix(), status, rtt, message)
 		if err != nil {
 			return fmt.Errorf("failed to insert status for server %d: %w", serverID, err)
 		}
 
+		recordCount++
 		currentTime = currentTime.Add(interval)
 	}
 
+	// Commit the transaction
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	log.Printf("Inserted %d status records for server %s", recordCount, serverName)
 	return nil
 }
 
@@ -277,8 +296,8 @@ func main() {
 
 	log.Println("All servers created successfully.")
 
-	// Create 2 weeks of fake uptime data for each server
-	log.Println("Generating 2 weeks of fake uptime data for each server...")
+	// Create 3 months of fake uptime data for each server
+	log.Println("Generating 3 months of fake uptime data for each server...")
 
 	for i, serverID := range serverIDs {
 		// Get server name for logging
@@ -297,7 +316,7 @@ func main() {
 
 	log.Println("Database seeding completed successfully!")
 	log.Printf("- Created 10 servers with realistic two-part names")
-	log.Printf("- Generated 2 weeks of uptime data for each server")
+	log.Printf("- Generated 3 months of uptime data for each server")
 	log.Printf("- Database saved to: %s", dbPath)
 	log.Println("You can now run the main application to view the seeded data.")
 }

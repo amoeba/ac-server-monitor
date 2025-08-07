@@ -2,6 +2,15 @@
     --shared-grid-template-columns: 10em 10em;
     --shared-grid-column-gap: 1em;
     --shared-grid-row-gap: 1em;
+    
+    /* Uptime colors */
+    --uptime-high-bg: rgba(18, 168, 85, 0.8);
+    --uptime-high-border: rgba(9, 83, 42, 0.5);
+    --uptime-mid-bg: rgba(168, 116, 18, 0.8);
+    --uptime-mid-border: rgba(87, 60, 9, 0.5);
+    --uptime-low-bg: rgba(216, 25, 25, 0.8);
+    --uptime-low-border: rgba(160, 20, 20, 0.5);
+    --uptime-no-data-bg: rgba(240, 240, 240, 0.8);
 }
 
 /* General styles */
@@ -121,18 +130,18 @@ table {
 }
 
 .bar.high {
-    border-top: 1px solid rgba(9, 83, 42, 0.5);
-    background-color: rgba(18, 168, 85, 0.5);
+    border-top: 1px solid var(--uptime-high-border);
+    background-color: var(--uptime-high-bg);
 }
 
 .bar.mid {
-    border-top: 1px solid rgba(87, 60, 9, 0.5);
-    background-color: rgba(168, 116, 18, 0.5);
+    border-top: 1px solid var(--uptime-mid-border);
+    background-color: var(--uptime-mid-bg);
 }
 
 .bar.low {
-    border-top: 1px solid rgba(160, 20, 20, 0.5);
-    background-color: rgba(216, 25, 25, 0.5);
+    border-top: 1px solid var(--uptime-low-border);
+    background-color: var(--uptime-low-bg);
 }
 
 /* Uptime Checks Table */
@@ -181,4 +190,66 @@ table {
 
 .box-content {
     word-break: break-word;
+}
+
+/* 3-Month Status Visualization */
+.status-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    margin-bottom: 1em;
+    font-size: 0.875em;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+
+.uptime-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    margin: 1em 0;
+}
+
+.uptime-square {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.uptime-square.high {
+    background-color: var(--uptime-high-bg);
+}
+
+.uptime-square.mid {
+    background-color: var(--uptime-mid-bg);
+}
+
+.uptime-square.low {
+    background-color: var(--uptime-low-bg);
+}
+
+.uptime-square.no-data {
+    background-color: var(--uptime-no-data-bg);
+}
+
+.uptime-square:hover {
+    transform: scale(1.2);
+    z-index: 1;
+    position: relative;
+}
+
+@media (max-width: 480px) {
+    .uptime-grid {
+        gap: 1px;
+    }
+    
+    .status-legend {
+        flex-direction: column;
+        gap: 0.5em;
+    }
 }

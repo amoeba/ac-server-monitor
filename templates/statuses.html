@@ -31,6 +31,36 @@
       </tr>
     </table>
 
+    <h3>Status Over Time (Last 3 Months)</h3>
+    <div class="status-legend">
+      <div class="legend-item">
+        <span class="uptime-square high"></span>
+        <span>99%+ uptime</span>
+      </div>
+      <div class="legend-item">
+        <span class="uptime-square mid"></span>
+        <span>50-99% uptime</span>
+      </div>
+      <div class="legend-item">
+        <span class="uptime-square low"></span>
+        <span>&lt;50% uptime</span>
+      </div>
+      <div class="legend-item">
+        <span class="uptime-square no-data"></span>
+        <span>No data</span>
+      </div>
+    </div>
+    
+    <div class="uptime-grid">
+      {{ range $uptime := .ThreeMonthUptime }}
+      <div
+        class="uptime-square {{ $uptime.UptimeClass }}{{ if eq $uptime.N 0 }} no-data{{ end }}"
+        data-tippy-content="<div><strong>{{ $uptime.Date }}</strong></div><div>Uptime: {{ $uptime.UptimeFmt }}%</div><div>Checks: {{ $uptime.N }}</div>{{ if ne $uptime.RTTMean "n/a" }}<div>Avg RTT: {{ $uptime.RTTMean }} ms</div>{{ end }}"
+        title="{{ $uptime.Date }}: {{ $uptime.UptimeFmt }}% uptime"
+      ></div>
+      {{ end }}
+    </div>
+
     <h3>Latest Check Results</h3>
     {{ if not .Statuses.Statuses }}
     No statuses to show.

@@ -273,13 +273,16 @@ func (a App) Statuses(w http.ResponseWriter, r *http.Request) {
 
 	var server api.ServerTableRow = api.Server(a.Database, server_id)
 	var statuses api.StatusApiResponse = api.Statuses(a.Database, server_id)
+	var threeMonthUptime []api.UptimeTemplateItem = api.UptimeThreeMonths(a.Database, server_id, server.Name)
 
 	data := struct {
-		Server   api.ServerTableRow
-		Statuses api.StatusApiResponse
+		Server            api.ServerTableRow
+		Statuses          api.StatusApiResponse
+		ThreeMonthUptime  []api.UptimeTemplateItem
 	}{
-		Server:   server,
-		Statuses: statuses,
+		Server:           server,
+		Statuses:         statuses,
+		ThreeMonthUptime: threeMonthUptime,
 	}
 
 	lib.RenderTemplate(w, "statuses.html", data)
