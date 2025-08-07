@@ -23,8 +23,8 @@ type RTT struct {
 }
 
 type UptimeResult struct {
-	Server string `json:"server"`
-	Count int `json:"count"`
+	Server  string          `json:"server"`
+	Count   int             `json:"count"`
 	Uptimes []UptimeApiItem `json:"uptimes"`
 }
 
@@ -73,45 +73,45 @@ var QUERY_UPTIME = `
 var QUERY_UPTIME_3_MONTHS = `
 	WITH RECURSIVE week_grid(week_start, week_num, day_offset, current_day) AS (
 		-- Find the Monday that's roughly 5 months ago
-		SELECT 
+		SELECT
 			date('now', '-150 days', 'weekday 1') as week_start,
 			0 as week_num,
 			0 as day_offset,
 			date('now', '-150 days', 'weekday 1') as current_day
-		
+
 		UNION ALL
-		
+
 		-- Generate days until we reach today
-		SELECT 
-			CASE WHEN day_offset = 6 
+		SELECT
+			CASE WHEN day_offset = 6
 				THEN date(week_start, '+7 days')
-				ELSE week_start 
+				ELSE week_start
 			END,
-			CASE WHEN day_offset = 6 
-				THEN week_num + 1 
-				ELSE week_num 
+			CASE WHEN day_offset = 6
+				THEN week_num + 1
+				ELSE week_num
 			END,
 			(day_offset + 1) % 7,
 			date(current_day, '+1 day')
-		FROM week_grid 
+		FROM week_grid
 		WHERE current_day < date('now')
 	),
 	calendar_days AS (
-		SELECT 
+		SELECT
 			current_day as day,
 			week_num,
 			day_offset
 		FROM week_grid
 	)
-	SELECT 
+	SELECT
 		day,
 		COALESCE((sum(status) * 1.0 / COUNT(status)) * 100, 0) AS uptime,
 		COUNT(status) AS n,
 		MIN(rtt) as rtt_min,
-		MAX(rtt) as rtt_max,  
+		MAX(rtt) as rtt_max,
 		AVG(rtt) as rtt_mean
 	FROM calendar_days
-	LEFT JOIN statuses ON 
+	LEFT JOIN statuses ON
 		date(statuses.created_at, 'unixepoch') = calendar_days.day
 		AND statuses.server_id = ?
 	GROUP BY day, week_num, day_offset
@@ -120,8 +120,8 @@ var QUERY_UPTIME_3_MONTHS = `
 
 const (
 	UPTIME_CLASS_HIGH string = "high"
-	UPTIME_CLASS_MID         = "mid"
-	UPTIME_CLASS_LOW         = "low"
+	UPTIME_CLASS_MID  string = "mid"
+	UPTIME_CLASS_LOW  string = "low"
 )
 
 func GetUptimeClass(uptime float64) string {

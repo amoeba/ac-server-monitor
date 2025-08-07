@@ -33,7 +33,13 @@ func RenderTemplate(w http.ResponseWriter, name string, data interface{}) {
 	// time. This makes it much easier to develop though, so we can edit our
 	// templates and the changes will be reflected without having to restart
 	// the app.
-	t, err := template.ParseGlob("templates/*.html")
+	
+	// Create template with custom functions
+	t := template.New("").Funcs(template.FuncMap{
+		"gitHash": GetGitHash,
+	})
+	
+	t, err := t.ParseGlob("templates/*.html")
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error %s", err.Error()), 500)
 		return
@@ -102,4 +108,13 @@ func BufferToPrettyString(buf []byte) string {
 	}
 
 	return builder.String()
+}
+
+var GitHash string
+
+func GetGitHash() string {
+	if GitHash == "" {
+		return "dev"
+	}
+	return GitHash
 }

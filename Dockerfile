@@ -1,11 +1,13 @@
 ARG GO_VERSION=1
 FROM golang:${GO_VERSION}-bookworm AS builder
 
+RUN apt-get update && apt-get install -y make git
+
 WORKDIR /build
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 COPY . .
-RUN go build -v -o monitor .
+RUN make build
 
 FROM debian:bookworm
 
