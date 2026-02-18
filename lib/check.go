@@ -102,7 +102,7 @@ func CheckWithRetry(srv Server, maxRetries int, delay time.Duration) (bool, int,
 // It returns true or false, depending on whether the server is up and may
 // return an error if the checking process fails
 func Check(srv Server) (bool, error) {
-	connectionstring := fmt.Sprintf("%s:%s", srv.Host, srv.Port)
+	connectionstring := net.JoinHostPort(srv.Host, srv.Port)
 	conn, err := net.DialTimeout("udp", connectionstring, timeout*time.Second)
 
 	if err != nil {

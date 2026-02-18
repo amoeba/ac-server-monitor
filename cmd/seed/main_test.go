@@ -66,7 +66,7 @@ func TestSeedProgram(t *testing.T) {
 
 func TestTwoPartServerNames(t *testing.T) {
 	// Test multiple generated names to ensure they follow the two-part format
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		name := GenerateTwoPartServerName()
 		assert.Contains(t, name, " ", "Server name should contain a space for two-part format")
 

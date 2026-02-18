@@ -45,7 +45,7 @@ func GenerateTwoPartServerName() string {
 }
 
 // CreateFakeServer generates a fake server record
-func CreateFakeServer() map[string]interface{} {
+func CreateFakeServer() map[string]any {
 	// Generate a unique GUID
 	guid := faker.UUIDDigit()
 
@@ -84,7 +84,7 @@ func CreateFakeServer() map[string]interface{} {
 
 	now := time.Now().Unix()
 
-	return map[string]interface{}{
+	return map[string]any{
 		"guid":        guid,
 		"name":        name,
 		"description": description,
@@ -104,7 +104,7 @@ func CreateFakeServer() map[string]interface{} {
 }
 
 // InsertServer inserts a server record into the database
-func InsertServer(db *sql.DB, server map[string]interface{}) (int64, error) {
+func InsertServer(db *sql.DB, server map[string]any) (int64, error) {
 	query := `
 		INSERT INTO servers (
 			guid, name, description, emu, host, port, type, status, 
@@ -284,7 +284,7 @@ func main() {
 	log.Println("Creating 10 fake servers...")
 	var serverIDs []int64
 
-	for i := 0; i < 10; i++ {
+	for i := range 10 {
 		server := CreateFakeServer()
 		serverID, err := InsertServer(db, server)
 		if err != nil {

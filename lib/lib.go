@@ -28,17 +28,17 @@ func LogReq(f func(w http.ResponseWriter, r *http.Request)) http.Handler {
 	})
 }
 
-func RenderTemplate(w http.ResponseWriter, name string, data interface{}) {
+func RenderTemplate(w http.ResponseWriter, name string, data any) {
 	// This is inefficient - it reads the templates from the filesystem every
 	// time. This makes it much easier to develop though, so we can edit our
 	// templates and the changes will be reflected without having to restart
 	// the app.
-	
+
 	// Create template with custom functions
 	t := template.New("").Funcs(template.FuncMap{
 		"gitHash": GetGitHash,
 	})
-	
+
 	t, err := t.ParseGlob("templates/*.html")
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error %s", err.Error()), 500)
