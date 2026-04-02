@@ -314,18 +314,26 @@ func main() {
 	flag_no_cron := flag.Bool("no-cron", false, "Whether to periodically check servers. Defaults to false.")
 	flag_sync_on_startup := flag.Bool("sync_on_startup", false, "Whether to sync with the community servers list on startup. Defaults to false.")
 	flag_check_on_startup := flag.Bool("check_on_startup", false, "Whether to sync and check servers on startup. Defaults to false.")
-	flag_check_one := flag.String("check", "", "hostname:port or ip:port of server to check on start.")
+	flag_check_one := flag.String("check", "", "hostname:port or ip:port of server to check on start. Port defaults to 9000 if omitted.")
 	flag.Parse()
 
 	// Detect check_one and just do the check and quit
 	if len(*flag_check_one) > 0 {
 		s := strings.Split(*flag_check_one, ":")
 
-		if len(s) != 2 {
+		var host, port string
+		switch len(s) {
+		case 1:
+			host = s[0]
+			port = "9000"
+		case 2:
+			host = s[0]
+			port = s[1]
+		default:
 			log.Panicf("Couldn't parse %s. Check your formatting.", *flag_check_one)
 		}
 
-		lib.CheckOne(s[0], s[1])
+		lib.CheckOne(host, port)
 		return
 	}
 
